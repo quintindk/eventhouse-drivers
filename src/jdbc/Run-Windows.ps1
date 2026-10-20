@@ -724,18 +724,31 @@ try {
         }
         $report.sha256 = @{ jar = (Hash $jar); dll = (Hash $dll); jna = (Hash $jna); windows_lock = $lockHash; managed_lock = $managedLockHash }
         $stage = 'dependencies-and-licences'
-        $assets = Get-Content -LiteralPath (Join-Path $root 'product-obj\project.assets.json') -Raw | ConvertFrom-Json -AsHashtable
+        $report.dependency_step = 'assets-parse'
+        $assetsPath = Join-Path $root 'product-obj\project.assets.json'
+        if (-not (Test-Path -LiteralPath $assetsPath -PathType Leaf)) {
+            $outcome = 'blocked'; throw 'Product assets missing.'
+        }
+        $assets = Get-Content -LiteralPath $assetsPath -Raw | ConvertFrom-Json -AsHashtable
         $components = @(); $dependencies = @(); $licencesUnknown = 0
         $dependencyEdges = @{}
         $licenceDirectory = Join-Path $package 'licences'
+        $report.dependency_step = 'licence-directory'
         New-Item -ItemType Directory -Force -Path $licenceDirectory | Out-Null
         # Include every resolved package, including build tools, not merely Azure.Identity.
         $resolved = @{}
+        $report.dependency_step = 'resolved-packages'
         foreach ($key in $assets.libraries.Keys) {
             if ($assets.libraries[$key].type -eq 'package') { $resolved[$key.ToLowerInvariant()] = $true }
         }
         # NativeAOT/runtime reference packs can be downloadDependencies, outside libraries.
-        foreach ($nuspec in Get-ChildItem -LiteralPath (Join-Path $root 'packages') -Filter '*.nuspec' -Recurse -File) {
+        $report.dependency_step = 'nuspec-enumeration'
+        $packagesPath = Join-Path $root 'packages'
+        if (-not (Test-Path -LiteralPath $packagesPath -PathType Container)) {
+            $outcome = 'blocked'; throw 'Restored packages missing.'
+        }
+        foreach ($nuspec in Get-ChildItem -LiteralPath $packagesPath -Filter '*.nuspec' -Recurse -File) {
+            $report.dependency_step = 'nuspec-parse'
             [xml] $metadata = Get-Content -LiteralPath $nuspec.FullName -Raw
             $id = [string] $metadata.package.metadata.id
             $version = [string] $metadata.package.metadata.version
@@ -744,9 +757,11 @@ try {
             $ref = "pkg:nuget/$id@$version"
             $component = [ordered]@{ type = 'library'; 'bom-ref' = $ref; name = $id; version = $version; purl = $ref
                 properties = @(@{ name = 'eventhouse:scope'; value = 'resolved product restore; includes build-only packages' }) }
+            $report.dependency_step = 'package-archive'
             $nupkg = @(Get-ChildItem -LiteralPath $nuspec.DirectoryName -Filter '*.nupkg' -File)
-            if ($nupkg.Count -ne 1) { throw 'Exact restored package archive missing.' }
+            if ($nupkg.Count -ne 1) { $outcome = 'blocked'; throw 'Exact restored package archive missing.' }
             $component.hashes = @(@{ alg = 'SHA-256'; content = (Hash $nupkg[0].FullName) })
+            $report.dependency_step = 'package-licence'
             $licenseNode = $metadata.SelectSingleNode("/*[local-name()='package']/*[local-name()='metadata']/*[local-name()='license']")
             if ($null -ne $licenseNode -and $licenseNode.GetAttribute('type') -eq 'expression') {
                 $component.licenses = @(@{ expression = $licenseNode.InnerText })
@@ -760,8 +775,12 @@ try {
             $evidenceFiles = @(Get-ChildItem -LiteralPath $nuspec.DirectoryName -Recurse -File |
                 Where-Object { $_.Name -match '(?i)^(licen[cs]e|notice|third.party)' })
             if ($null -ne $licenseNode -and $licenseNode.GetAttribute('type') -eq 'file') {
+                if (-not (Test-Path -LiteralPath (Join-Path $nuspec.DirectoryName $licenseNode.InnerText) -PathType Leaf)) {
+                    $outcome = 'blocked'; throw 'Declared package licence file missing.'
+                }
                 $evidenceFiles += Get-Item -LiteralPath (Join-Path $nuspec.DirectoryName $licenseNode.InnerText)
             }
+            $report.dependency_step = 'package-licence-copy'
             foreach ($file in $evidenceFiles | Sort-Object FullName -Unique) {
                 $relative = [IO.Path]::GetRelativePath($nuspec.DirectoryName, $file.FullName)
                 $target = Join-Path $destination $relative
@@ -770,7 +789,9 @@ try {
             }
             $components += $component
         }
-        if ($resolved.Count) { throw 'Resolved NuGet licence metadata missing.' }
+        $report.dependency_step = 'resolved-metadata-closure'
+        if ($resolved.Count) { $outcome = 'blocked'; throw 'Resolved NuGet licence metadata missing.' }
+        $report.dependency_step = 'dependency-edges'
         foreach ($target in $assets.targets.Values) {
             foreach ($key in $target.Keys) {
                 if ($assets.libraries[$key].type -ne 'package') { continue }
@@ -792,6 +813,7 @@ try {
             $dependencies += @{ ref = $reference; dependsOn = @($dependencyEdges[$reference]) }
         }
         # JNA licence evidence comes from the exact hash-pinned JAR, not an inferred licence table.
+        $report.dependency_step = 'jna-licences'
         $jnaZip = [IO.Compression.ZipFile]::OpenRead($jna)
         try {
             $jnaLicences = @($jnaZip.Entries | Where-Object { $_.FullName -match '(?i)(^|/)(LICENSE|LGPL|AL2\.0|NOTICE)([^/]*)(\.txt)?$' })
@@ -811,12 +833,14 @@ try {
         $dllRef = "eventhouse-engine-$Runtime"
         $jnaRef = 'pkg:maven/net.java.dev.jna/jna@5.17.0'
         # All these hashes come from this build, never a historical candidate.
+        $report.dependency_step = 'product-components'
         $components += @{ type = 'library'; 'bom-ref' = $jarRef; name = 'eventhouse-jdbc'; version = '0.1.0-rc.1'
             hashes = @(@{ alg = 'SHA-256'; content = (Hash $jar) }); licenses = @(@{ expression = 'MIT' }) }
         $components += @{ type = 'library'; 'bom-ref' = $dllRef; name = 'eventhouse-engine'; version = '0.1.0-rc.1'
             hashes = @(@{ alg = 'SHA-256'; content = (Hash $dll) }); licenses = @(@{ expression = 'MIT' })
             properties = @(@{ name = 'eventhouse:native-composition'; value = 'NativeAOT runtime and Brotli attribution incomplete; exports are not source provenance' }) }
         $members = @()
+        $report.dependency_step = 'jna-members'
         $jnaZip = [IO.Compression.ZipFile]::OpenRead($jna)
         try {
             foreach ($entry in $jnaZip.Entries | Where-Object { $_.FullName -match '\.(dll|so|jnilib|a)$' } | Sort-Object FullName) {
@@ -832,6 +856,7 @@ try {
                 $dependencies += @{ ref = $memberRef; dependsOn = @() }
             }
         } finally { $jnaZip.Dispose() }
+        $report.dependency_step = 'component-attribution'
         $components += @{ type = 'library'; 'bom-ref' = 'native-attribution:libffi'; name = 'libffi'
             properties = @(@{ name = 'eventhouse:status'; value = 'Tagged JNA source attribution only; prebuilt member linkage and version unverified' }) }
         $components += @{ type = 'library'; 'bom-ref' = 'native-attribution:brotli'; name = 'Brotli'
@@ -858,18 +883,29 @@ try {
                 $dependencies += @{ ref = $component.'bom-ref'; dependsOn = @() }
             }
         }
+        $report.dependency_step = 'notice-manifest-parse'
         $noticeManifestPath = Join-Path $repo 'infra\release\notice-materials.json'
+        if (-not (Test-Path -LiteralPath $noticeManifestPath -PathType Leaf)) {
+            $outcome = 'blocked'; throw 'Notice manifest missing.'
+        }
         $noticeManifest = Get-Content -LiteralPath $noticeManifestPath -Raw | ConvertFrom-Json -AsHashtable
         foreach ($material in $noticeManifest.materials) {
+            $report.dependency_step = 'notice-material-verify'
             $relative = [string] $material.path
             if ($relative -cnotmatch '^licences/[A-Za-z0-9_./-]+$' -or $relative.Contains('..')) { throw 'Invalid notice path.' }
             $source = Join-Path $repo $relative
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+                $outcome = 'blocked'; throw 'Vendored notice missing.'
+            }
             if ((Hash $source) -cne $material.sha256) { throw 'Vendored notice hash mismatch.' }
+            $report.dependency_step = 'notice-material-copy'
             $destination = Join-Path $package $relative
             New-Item -ItemType Directory -Force -Path (Split-Path $destination) | Out-Null
             Copy-Item -LiteralPath $source -Destination $destination
         }
+        $report.dependency_step = 'notice-manifest-copy'
         Copy-Item -LiteralPath $noticeManifestPath -Destination (Join-Path $licenceDirectory 'notice-materials.json')
+        $report.dependency_step = 'sbom-write'
         @{ bomFormat = 'CycloneDX'; specVersion = '1.5'; version = 1
             metadata = @{ component = @{ type = 'application'; 'bom-ref' = $productRef; name = 'eventhouse-jdbc'; version = '0.1.0-rc.1'
                 licenses = @(@{ expression = 'MIT' }) }
@@ -878,6 +914,7 @@ try {
             dependencies = @($dependencies | Sort-Object ref -Unique) } |
             ConvertTo-Json -Depth 20 | Set-Content -LiteralPath (Join-Path $package 'sbom.cdx.json') -Encoding utf8
         # ProtectedData's exact full bundled text resolves its legacy licence URL.
+        $report.dependency_step = 'licence-report'
         $report.licences = @{ components = $components.Count; restore_metadata_unknown = $licencesUnknown
             project_licence = 'MIT'; jna_election = 'Apache-2.0'; native_attribution = 'blocked'
             outcome = 'blocked'; reason = 'Full vendored texts included; WindowsDesktop aggregation and exact native attribution still require independent closure.' }
@@ -1010,6 +1047,19 @@ try {
 } catch {
     # Intentionally discard exception text and all native/compiler stderr.
     $report.route_outcome = $outcome
+    if ($stage -ceq 'dependencies-and-licences') {
+        # Positive allowlist only. Never print exception IDs, lines, paths or package metadata.
+        $reason = 'unclassified'
+        if ($report.Contains('dependency_step') -and $report.dependency_step -cin @(
+            'assets-parse', 'licence-directory', 'resolved-packages', 'nuspec-enumeration',
+            'nuspec-parse', 'package-archive', 'package-licence', 'package-licence-copy',
+            'resolved-metadata-closure', 'dependency-edges', 'jna-licences', 'product-components',
+            'jna-members', 'component-attribution', 'notice-manifest-parse', 'notice-material-verify',
+            'notice-material-copy', 'notice-manifest-copy', 'sbom-write', 'licence-report')) {
+            $reason = $report.dependency_step
+        }
+        Write-Output "$($outcome.ToUpperInvariant()) JDBC_DEPENDENCIES reason=$reason"
+    }
     Write-Output "$($outcome.ToUpperInvariant()) JDBC runtime=$Runtime stage=$stage"
     $report.outcome = $outcome; $report.stage = $stage
     if (Test-Path -LiteralPath $root) { $report | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $reportPath -Encoding utf8 }
