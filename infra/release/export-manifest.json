@@ -3,7 +3,7 @@
   "files": [
     {
       "path": ".github/workflows/jdbc-windows.yml",
-      "sha256": "07c2a7ecbd7dfe09af2790547a791df430295c8cdc096a4a73658a0ae48c5a5f"
+      "sha256": "d7efe85f2461a0db63f4d078ad9274c3890132be1c69918d2011f341956220bb"
     },
     {
       "path": ".gitignore",
@@ -407,7 +407,7 @@
     },
     {
       "path": "src/jdbc/Run-Windows.ps1",
-      "sha256": "52123c3a7263b2dc524bcc09379ecbd776d21ff72bed43dc4e69e9188746ee09"
+      "sha256": "b791d3604ccab923c4123a779a666b1081b04276e2b8d9f942143d02c039e1ee"
     },
     {
       "path": "src/jdbc/THIRD-PARTY-NOTICES.md",

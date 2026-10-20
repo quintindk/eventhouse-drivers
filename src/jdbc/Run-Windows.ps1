@@ -1,7 +1,7 @@
 # Run only from the protected manual workflow. No child stdout/stderr is forwarded.
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory)][ValidateSet('Build', 'Live', 'Gate')][string] $Phase,
+    [Parameter(Mandatory)][ValidateSet('Build', 'Live', 'Verify', 'Gate')][string] $Phase,
     [Parameter(Mandatory)][ValidateSet('win-x64', 'win-arm64')][string] $Runtime,
     [Parameter(Mandatory)][ValidateSet('x64', 'arm64')][string] $Architecture
 )
@@ -320,6 +320,151 @@ function Read-ReleaseGate($Evidence, [string] $Source, [string] $TargetRuntime,
         if ($gates[$key] -cnotmatch '^pass(?:$|:)') { $pending++ }
     }
     return $pending
+}
+
+function Public-Summary($Evidence) {
+    $pending = Read-ReleaseGate $Evidence $env:GITHUB_SHA $Runtime $Architecture $env:GITHUB_RUN_ID $env:GITHUB_RUN_ATTEMPT
+    foreach ($key in 'jar', 'dll', 'jna', 'windows_lock', 'managed_lock') {
+        if ($Evidence.sha256[$key] -isnot [string] -or $Evidence.sha256[$key] -cnotmatch '^[0-9a-f]{64}$') { throw 'Invalid digest.' }
+    }
+    if ($Evidence.package_sha256 -isnot [string] -or $Evidence.package_sha256 -cnotmatch '^[0-9a-f]{64}$') { throw 'Invalid archive digest.' }
+    # Positive projection only: no arbitrary keys, paths, version strings, messages,
+    # live row counts or nested report objects cross the public boundary.
+    return [ordered]@{ schema_version = 1; source_sha = $env:GITHUB_SHA; runtime = $Runtime
+        architecture = $Architecture; run_id = $env:GITHUB_RUN_ID; run_attempt = $env:GITHUB_RUN_ATTEMPT
+        outcome = 'live-route-pass'; release_ready = $false; pending_release_gates = $pending
+        distribution = 'blocked-notice-and-native-attribution-review'; candidate_uploaded = $false
+        package_sha256 = $Evidence.package_sha256; jar_sha256 = $Evidence.sha256.jar
+        dll_sha256 = $Evidence.sha256.dll; jna_sha256 = $Evidence.sha256.jna }
+}
+
+function Safe-PayloadName([string] $Name) {
+    if ($Name.Length -gt 240 -or $Name -cnotmatch '^[A-Za-z0-9_./-]+$' -or
+        $Name.StartsWith('/') -or $Name.Contains('//') -or
+        @($Name.Split('/') | Where-Object { $_ -in @('', '.', '..') }).Count) { return $false }
+    return $Name -cmatch ('^(?:README\.md|LICENSE|SECURITY\.md|THIRD-PARTY-NOTICES\.md|checksums\.sha256|provenance\.json|sbom\.cdx\.json|eventhouse-jdbc-0\.1\.0\.jar|lib/jna-5\.17\.0\.jar|native/' + [regex]::Escape($Runtime) + '/eventhouse-engine\.dll|docs/BUILD-INSTALL\.md|contracts/(?:eventhouse-engine\.h|product-abi\.md|operation-control\.md|streaming-results\.md|dynamic-json\.md)|infra/release/notice-materials\.json|licences/[A-Za-z0-9_./-]+)$')
+}
+
+function Verify-Archive([string] $Zip, $Expected, [string] $Destination) {
+    if ($Expected -isnot [Collections.IDictionary] -or $Expected.Count -lt 20 -or $Expected.Count -gt 1000) { throw 'Invalid payload set.' }
+    $archive = [IO.Compression.ZipFile]::OpenRead($Zip)
+    try {
+        $names = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+        $total = 0L
+        foreach ($entry in $archive.Entries) {
+            $name = $entry.FullName
+            if (-not (Safe-PayloadName $name) -or -not $names.Add($name) -or
+                -not (@($Expected.Keys) -ccontains $name) -or $Expected[$name] -cnotmatch '^[0-9a-f]{64}$' -or
+                (($entry.ExternalAttributes -shr 16) -band 0xF000) -eq 0xA000 -or
+                $entry.Length -gt 134217728) { throw 'Invalid archive entry.' }
+            $total += $entry.Length
+            if ($total -gt 268435456) { throw 'Archive too large.' }
+            $target = Join-Path $Destination $name
+            New-Item -ItemType Directory -Force -Path (Split-Path $target) | Out-Null
+            [IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $target, $false)
+            if ((Hash $target) -cne $Expected[$name]) { throw 'Payload digest mismatch.' }
+        }
+        if ($names.Count -ne $Expected.Count) { throw 'Incomplete archive.' }
+    } finally { $archive.Dispose() }
+    $checks = [ordered]@{}
+    foreach ($line in [IO.File]::ReadAllLines((Join-Path $Destination 'checksums.sha256'))) {
+        if ($line -cnotmatch '^([0-9a-f]{64})  ([A-Za-z0-9_./-]+)$') { throw 'Invalid checksum line.' }
+        $digest = $Matches[1]; $name = $Matches[2]
+        if (-not (Safe-PayloadName $name) -or $name -ceq 'checksums.sha256' -or $checks.Contains($name) -or
+            -not (@($Expected.Keys) -ccontains $name) -or $Expected[$name] -cne $digest) { throw 'Invalid checksum set.' }
+        $checks[$name] = $digest
+    }
+    if ($checks.Count -ne $Expected.Count - 1) { throw 'Incomplete checksums.' }
+    foreach ($required in 'LICENSE', 'README.md', 'SECURITY.md', 'THIRD-PARTY-NOTICES.md', 'sbom.cdx.json',
+        'provenance.json', 'infra/release/notice-materials.json', 'eventhouse-jdbc-0.1.0.jar',
+        'lib/jna-5.17.0.jar', "native/$Runtime/eventhouse-engine.dll") {
+        if (-not (@($Expected.Keys) -ccontains $required)) { throw 'Required payload absent.' }
+    }
+    if ((Hash (Join-Path $Destination 'LICENSE')) -cne (Hash (Join-Path $repo 'LICENSE'))) { throw 'Project licence mismatch.' }
+    $materials = Get-Content -LiteralPath (Join-Path $repo 'infra/release/notice-materials.json') -Raw | ConvertFrom-Json -AsHashtable
+    foreach ($material in $materials.materials) {
+        if (-not (@($Expected.Keys) -ccontains $material.path) -or $Expected[$material.path] -cne $material.sha256) { throw 'Notice missing or changed.' }
+    }
+}
+
+if ($Phase -eq 'Verify') {
+    $safeRoot = Join-Path $root 'public-safe'
+    $verifyRoot = Join-Path $root 'content-verification'
+    try {
+        # This branch receives no live configuration. Never upload the full report
+        # or candidate while notice/distribution acceptance remains incomplete.
+        foreach ($directory in $safeRoot, $verifyRoot) {
+            if (Test-Path -LiteralPath $directory) { Remove-Item -LiteralPath $directory -Recurse -Force }
+            New-Item -ItemType Directory -Path $directory | Out-Null
+        }
+        if ((Get-Item -LiteralPath $reportPath).Length -gt 1048576) { throw 'Report too large.' }
+        $existing = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json -AsHashtable
+        $summary = Public-Summary $existing
+        $zip = Join-Path $root "eventhouse-jdbc-0.1.0-rc.1-$Runtime.zip"
+        if ((Hash $zip) -cne $existing.package_sha256) { throw 'Archive identity mismatch.' }
+        $payload = Join-Path $verifyRoot 'payload'
+        New-Item -ItemType Directory -Path $payload | Out-Null
+        Verify-Archive $zip $existing.payload_sha256 $payload
+        foreach ($pair in @(@('eventhouse-jdbc-0.1.0.jar', $summary.jar_sha256),
+            @('lib/jna-5.17.0.jar', $summary.jna_sha256), @("native/$Runtime/eventhouse-engine.dll", $summary.dll_sha256))) {
+            if ((Hash (Join-Path $payload $pair[0])) -cne $pair[1]) { throw 'Pair identity mismatch.' }
+        }
+        $summary | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $safeRoot 'summary.json') -Encoding utf8
+        $records = @($existing.payload_sha256.Keys | Sort-Object | ForEach-Object {
+            @{ path = $_; sha256 = $existing.payload_sha256[$_] }
+        })
+        @{ schema_version = 1; files = $records } | ConvertTo-Json -Depth 5 |
+            Set-Content -LiteralPath (Join-Path $safeRoot 'payload-hashes.json') -Encoding utf8
+        $scannerName = "gitleaks_8.30.1_windows_$Architecture.zip"
+        $scannerPin = if ($Architecture -eq 'arm64') { 'b95f5e4f5c425cedca7ee203d9afd29597e692c4924a12ed42f970537c72cc0f' }
+            else { 'd29144deff3a68aa93ced33dddf84b7fdc26070add4aa0f4513094c8332afc4e' }
+        $base = 'https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/'
+        $checksPath = Join-Path $verifyRoot 'official-checksums.txt'
+        $scannerZip = Join-Path $verifyRoot 'scanner.zip'
+        Invoke-WebRequest ($base + 'gitleaks_8.30.1_checksums.txt') -OutFile $checksPath
+        if ((Hash $checksPath) -cne '061476c21adaf5441516f96f185c1a4706a83cd6329b9b38762271b3d4a52fae') { throw 'Scanner checksum identity mismatch.' }
+        if (@([IO.File]::ReadAllLines($checksPath) | Where-Object { $_ -ceq "$scannerPin  $scannerName" }).Count -ne 1) { throw 'Scanner official checksum mismatch.' }
+        Invoke-WebRequest ($base + $scannerName) -OutFile $scannerZip
+        if ((Hash $scannerZip) -cne $scannerPin) { throw 'Scanner archive identity mismatch.' }
+        $scannerDirectory = Join-Path $verifyRoot 'scanner'
+        Expand-Archive -LiteralPath $scannerZip -DestinationPath $scannerDirectory
+        $scanner = Join-Path $scannerDirectory 'gitleaks.exe'
+        $version = Invoke-Child $scanner @('version')
+        if ($version.Code -ne 0 -or $version.Text.Trim() -cne '8.30.1' -or $version.ErrorText) { throw 'Scanner version mismatch.' }
+        $config = Join-Path $verifyRoot 'scanner.toml'
+        @'
+[extend]
+useDefault = true
+[[rules]]
+id = "deployment-host"
+description = "Fabric deployment host is not public evidence"
+regex = '''(?i)[a-z0-9][a-z0-9.-]*\.kusto\.fabric\.microsoft\.com'''
+[[rules.allowlists]]
+regexTarget = "match"
+regexes = ['''(?i)^(?:example\.z2|synthetic-test)\.kusto\.fabric\.microsoft\.com$''']
+'@ | Set-Content -LiteralPath $config -Encoding utf8
+        # Ignore environment scanner overrides inherited from a runner.
+        foreach ($name in @([Environment]::GetEnvironmentVariables().Keys | Where-Object { $_ -like 'GITLEAKS_*' })) {
+            [Environment]::SetEnvironmentVariable($name, $null)
+        }
+        foreach ($scanPath in $payload, $safeRoot) {
+            $scan = Invoke-Child $scanner @('dir', $scanPath, '--config', $config,
+                '--gitleaks-ignore-path', (Join-Path $verifyRoot 'no-ignore'), '--ignore-gitleaks-allow',
+                '--redact=100', '--max-archive-depth=4', '--max-decode-depth=5',
+                '--no-banner', '--no-color', '--log-level=error', '--timeout=180') 200
+            if ($scan.Code -ne 0) { throw 'Content scan failed or incomplete.' }
+        }
+        if ((Hash $zip) -cne $summary.package_sha256) { throw 'Candidate changed during scan.' }
+        $safeHashes = Payload-Hashes $safeRoot
+        if ($safeHashes.Count -ne 2) { throw 'Unexpected public file.' }
+        if ($env:GITHUB_OUTPUT) { 'content_safe=true' >> $env:GITHUB_OUTPUT }
+        Write-Output 'PASS JDBC_CONTENT summary_and_hashes_only candidate_upload=false release_ready=false'
+        exit 0
+    } catch {
+        if (Test-Path -LiteralPath $safeRoot) { Remove-Item -LiteralPath $safeRoot -Recurse -Force }
+        Write-Output 'BLOCKED JDBC_CONTENT content_safe=false'
+        exit 2
+    }
 }
 
 # This consumes only this run's report. It cannot turn missing release evidence

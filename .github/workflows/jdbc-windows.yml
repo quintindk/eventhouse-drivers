@@ -88,8 +88,22 @@ jobs:
           EVENTHOUSE_QUERY_HOST: ${{ secrets.EVENTHOUSE_QUERY_HOST }}
         run: ./src/jdbc/Run-Windows.ps1 -Phase Live -Runtime win-${{ matrix.architecture }} -Architecture ${{ matrix.architecture }}
 
-      # No public upload or publication until exact outputs pass content review,
-      # secret scanning and all retained release gates. Public Actions artifacts
-      # are not private evidence custody.
+      # No binary candidate distribution while notices/native attribution remain
+      # incomplete. Retain only positively projected, scanned public evidence.
+      - name: Verify candidate content and project safe public evidence
+        id: content
+        run: ./src/jdbc/Run-Windows.ps1 -Phase Verify -Runtime win-${{ matrix.architecture }} -Architecture ${{ matrix.architecture }}
+
+      - name: Retain public experimental evidence (not an approved RC or candidate ZIP)
+        if: ${{ success() && steps.content.outputs.content_safe == 'true' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: experimental-evidence-win-${{ matrix.architecture }}-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/jdbc-rc-win-${{ matrix.architecture }}/public-safe/summary.json
+            ${{ runner.temp }}/jdbc-rc-win-${{ matrix.architecture }}/public-safe/payload-hashes.json
+
       - name: Enforce retained release gates
         run: ./src/jdbc/Run-Windows.ps1 -Phase Gate -Runtime win-${{ matrix.architecture }} -Architecture ${{ matrix.architecture }}
