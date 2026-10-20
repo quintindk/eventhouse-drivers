@@ -1,5 +1,15 @@
 package com.microsoft.eventhouse.jdbc;
 
+import com.sun.jna.Memory;
+import com.sun.jna.Native;
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.IntByReference;
+import com.sun.jna.win32.StdCallLibrary;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -25,15 +35,27 @@ public final class RcSmoke {
     @SuppressWarnings("try") // Repeated connection close is intentional.
     public static void main(String[] args) {
         String stage = "configuration";
+        boolean verifyRuntime = false;
+        RuntimeInspection inspection = null;
         try {
             boolean failures = false;
             boolean overcell = false;
             for (String arg : args) {
                 if ("--live-failures".equals(arg)) failures = true;
                 else if ("--overcell".equals(arg)) overcell = true;
+                else if ("--verify-runtime".equals(arg)) verifyRuntime = true;
                 else throw new IllegalArgumentException();
             }
             if (overcell && !failures) throw new IllegalArgumentException();
+            if (verifyRuntime) {
+                if (!failures) throw new RuntimeRejected(RuntimeReason.arguments);
+                if (!System.getProperty("os.name", "").startsWith("Windows")
+                        || java.io.File.separatorChar != '\\') {
+                    System.out.println("WP006R_RUNTIME outcome=blocked reason=platform checkpoints=0 expected=8");
+                    System.exit(2);
+                    return;
+                }
+            }
             String host = required("EVENTHOUSE_QUERY_HOST");
             Properties p = new Properties();
             for (String[] pair : new String[][] {{"tenantId", "AZURE_TENANT_ID"},
@@ -44,6 +66,12 @@ public final class RcSmoke {
             p.setProperty("timeoutMillis", "30000");
             String database = URLEncoder.encode(required("EVENTHOUSE_DB_NAME"), StandardCharsets.UTF_8)
                     .replace("+", "%20");
+            if (verifyRuntime) {
+                inspection = new RuntimeInspection(Path.of(p.getProperty("nativeLibrary")));
+                inspection.checkpoint("pre_load");
+                NativeEngine.load(inspection.target);
+                inspection.checkpoint("post_load");
+            }
             stage = "open";
             try (Connection c = DriverManager.getConnection("jdbc:eventhouse://" + host + "/" + database, p)) {
                 stage = "select-one";
@@ -87,6 +115,7 @@ public final class RcSmoke {
                 }
                 stage = "recovery";
                 one(c);
+                if (inspection != null) inspection.checkpoint("query_recovery");
                 stage = "unsupported";
                 try {
                     c.prepareStatement("SELECT 1");
@@ -106,6 +135,7 @@ public final class RcSmoke {
                 c.close();
                 check(c.isClosed());
             }
+            if (inspection != null) inspection.checkpoint("base_closed");
             System.out.println("PASS WP005K_RC assertions=" + assertions
                     + " known_values=pass query_rejection=pass recovery=pass unsupported=pass repeat_close=pass"
                     + " live_inflight_cancel=blocked live_inflight_timeout=blocked");
@@ -135,14 +165,190 @@ public final class RcSmoke {
                     else if (outcome.startsWith("blocked_")) blocked++;
                     System.out.println("WP006D case=" + name + " outcome=" + outcome
                             + " assertions=" + (assertions - before));
+                    if (inspection != null && !"overcell".equals(name)) {
+                        // A failed/blocked recovery must never acquire a successful checkpoint.
+                        inspection.checkpoint(RuntimePolicy.recoveryCheckpoint(name, outcome));
+                    }
                 }
                 System.out.println("WP006D cases=4 pass=" + (4 - failed - blocked)
                         + " fail=" + failed + " blocked=" + blocked + " assertions=" + (assertions - 45));
+                if (inspection != null) {
+                    if (failed != 0) throw new RuntimeRejected(RuntimeReason.workload);
+                    inspection.checkpoint("final");
+                    System.out.println("WP006R_RUNTIME outcome=pass checkpoints=8 expected=8");
+                }
                 if (failed != 0 || blocked != 0) System.exit(failed != 0 ? 1 : 2);
             }
         } catch (Throwable failure) {
+            if (verifyRuntime) {
+                RuntimeReason reason = failure instanceof RuntimeRejected r ? r.reason : RuntimeReason.workload;
+                System.out.println("WP006R_RUNTIME outcome=fail reason=" + reason
+                        + " checkpoints=" + (inspection == null ? 0 : inspection.completed) + " expected=8");
+            }
             System.out.println("FAIL WP005K_RC stage=" + stage);
             System.exit(1);
+        }
+    }
+
+    enum RuntimeReason { arguments, platform, binding, enumeration, bounds, truncation, unstable,
+        identity, external_runtime, sequence, workload }
+
+    static final class RuntimeRejected extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+        final RuntimeReason reason;
+        RuntimeRejected(RuntimeReason reason) { super(reason.name()); this.reason = reason; }
+    }
+
+    /** Pure validation shared with DriverTest. No Windows API or library initialisation. */
+    static final class RuntimePolicy {
+        static final int INITIAL = 256, MAXIMUM = 4096, PASSES = 4, NAME_CAPACITY = 32768;
+        static final String[] CHECKPOINTS = {"pre_load", "post_load", "query_recovery", "base_closed",
+            "cancel_recovery", "deadline_recovery", "auth_reconnect", "final"};
+        private static final Set<String> FORBIDDEN = Set.of("coreclr.dll", "clrjit.dll", "hostfxr.dll",
+                "hostpolicy.dll", "nethost.dll", "mscoree.dll", "clr.dll", "mscorjit.dll",
+                "mscorwks.dll", "mscorsvr.dll", "sos.dll");
+
+        static boolean forbidden(String basename) { return FORBIDDEN.contains(basename.toLowerCase(Locale.ROOT)); }
+
+        static int moduleCount(boolean success, int needed, int pointerSize) {
+            if (!success) throw new RuntimeRejected(RuntimeReason.enumeration);
+            long bytes = Integer.toUnsignedLong(needed);
+            if (pointerSize != 8 || bytes == 0 || bytes % pointerSize != 0
+                    || bytes / pointerSize > MAXIMUM) throw new RuntimeRejected(RuntimeReason.bounds);
+            return (int) (bytes / pointerSize);
+        }
+
+        static boolean complete(int count, int capacity, int pass) {
+            if (count < 1 || count > MAXIMUM || capacity < INITIAL || capacity > MAXIMUM
+                    || pass < 1 || pass > PASSES) throw new RuntimeRejected(RuntimeReason.bounds);
+            if (count <= capacity) return true;
+            if (pass == PASSES) throw new RuntimeRejected(RuntimeReason.truncation);
+            return false;
+        }
+
+        static String filename(int length, char[] buffer) {
+            if (length <= 0 || length >= buffer.length || buffer[length] != 0)
+                throw new RuntimeRejected(RuntimeReason.truncation);
+            for (int i = 0; i < length; i++) {
+                if (buffer[i] == 0) throw new RuntimeRejected(RuntimeReason.truncation);
+            }
+            return new String(buffer, 0, length);
+        }
+
+        static void sequence(int completed, String checkpoint) {
+            if (completed < 0 || completed >= CHECKPOINTS.length || !CHECKPOINTS[completed].equals(checkpoint))
+                throw new RuntimeRejected(RuntimeReason.sequence);
+        }
+
+        static String recoveryCheckpoint(String name, String outcome) {
+            if (!"pass".equals(outcome)) throw new RuntimeRejected(RuntimeReason.workload);
+            return switch (name) {
+                case "cursor_cancel" -> "cancel_recovery";
+                case "idle_deadline" -> "deadline_recovery";
+                case "invalid_secret" -> "auth_reconnect";
+                default -> throw new RuntimeRejected(RuntimeReason.sequence);
+            };
+        }
+
+        static void module(Map<Long, Path> modules, long handle, Path path) {
+            if (handle == 0 || path == null || !path.isAbsolute() || path.getFileName() == null
+                    || modules.putIfAbsent(handle, path) != null)
+                throw new RuntimeRejected(RuntimeReason.identity);
+            if (forbidden(path.getFileName().toString())) throw new RuntimeRejected(RuntimeReason.external_runtime);
+        }
+
+        static int targetCount(Map<Long, Path> modules, Path target, boolean loaded) {
+            int count = 0;
+            for (Path path : modules.values()) {
+                if (target.equals(path)) count++;
+                else if (target.getFileName().toString().equalsIgnoreCase(path.getFileName().toString()))
+                    throw new RuntimeRejected(RuntimeReason.identity);
+            }
+            if (count != (loaded ? 1 : 0)) throw new RuntimeRejected(RuntimeReason.identity);
+            return count;
+        }
+
+        static boolean stable(Map<Long, Path> previous, Map<Long, Path> current, int pass) {
+            if (pass < 1 || pass > PASSES) throw new RuntimeRejected(RuntimeReason.bounds);
+            if (previous != null && previous.equals(current)) return true;
+            if (pass == PASSES) throw new RuntimeRejected(RuntimeReason.unstable);
+            return false;
+        }
+    }
+
+    public interface RuntimeKernel32 extends StdCallLibrary {
+        Pointer GetCurrentProcess();
+        int GetModuleFileNameW(Pointer module, char[] filename, int capacity);
+        int GetSystemDirectoryW(char[] directory, int capacity);
+    }
+
+    public interface RuntimePsapi extends StdCallLibrary {
+        int EnumProcessModulesEx(Pointer process, Pointer modules, int bytes, IntByReference needed, int filter);
+    }
+
+    /** Own JVM only. Never closes module handles, unloads libraries or prints module paths. */
+    private static final class RuntimeInspection {
+        final Path target;
+        final RuntimeKernel32 kernel;
+        final RuntimePsapi psapi;
+        final Pointer process;
+        int completed;
+
+        RuntimeInspection(Path configured) {
+            try {
+                if (!configured.isAbsolute() || Native.POINTER_SIZE != 8)
+                    throw new RuntimeRejected(RuntimeReason.identity);
+                target = configured.toRealPath();
+                kernel = Native.load("kernel32", RuntimeKernel32.class);
+                char[] directory = new char[RuntimePolicy.NAME_CAPACITY];
+                String system = RuntimePolicy.filename(kernel.GetSystemDirectoryW(directory, directory.length), directory);
+                psapi = Native.load(Path.of(system).resolve("psapi.dll").toString(), RuntimePsapi.class);
+                process = kernel.GetCurrentProcess();
+                if (process == null || Pointer.nativeValue(process) == 0)
+                    throw new RuntimeRejected(RuntimeReason.binding);
+            } catch (RuntimeRejected rejected) { throw rejected; }
+            catch (Exception | LinkageError failure) { throw new RuntimeRejected(RuntimeReason.binding); }
+        }
+
+        void checkpoint(String checkpoint) {
+            RuntimePolicy.sequence(completed, checkpoint);
+            try {
+                Map<Long, Path> previous = null;
+                int capacity = RuntimePolicy.INITIAL;
+                char[] name = new char[RuntimePolicy.NAME_CAPACITY];
+                for (int pass = 1; pass <= RuntimePolicy.PASSES; pass++) {
+                    Map<Long, Path> current = new HashMap<>();
+                    try (Memory handles = new Memory(Math.multiplyExact((long) capacity, Native.POINTER_SIZE))) {
+                        IntByReference needed = new IntByReference();
+                        int count = RuntimePolicy.moduleCount(psapi.EnumProcessModulesEx(process, handles,
+                                Math.toIntExact(handles.size()), needed, 3) != 0, needed.getValue(), Native.POINTER_SIZE);
+                        if (!RuntimePolicy.complete(count, capacity, pass)) {
+                            capacity = count;
+                            previous = null; // An incomplete observation never establishes stability.
+                            continue;
+                        }
+                        for (int i = 0; i < count; i++) {
+                            Pointer handle = handles.getPointer((long) i * Native.POINTER_SIZE);
+                            if (handle == null) throw new RuntimeRejected(RuntimeReason.identity);
+                            java.util.Arrays.fill(name, '\0');
+                            String filename = RuntimePolicy.filename(kernel.GetModuleFileNameW(handle, name, name.length), name);
+                            Path path = Path.of(filename);
+                            if (!path.isAbsolute()) throw new RuntimeRejected(RuntimeReason.identity);
+                            RuntimePolicy.module(current, Pointer.nativeValue(handle), path.toRealPath());
+                        }
+                    }
+                    int targets = RuntimePolicy.targetCount(current, target, completed != 0);
+                    if (RuntimePolicy.stable(previous, current, pass)) {
+                        completed++;
+                        System.out.println("WP006R_MODULE checkpoint=" + checkpoint + " outcome=pass modules="
+                                + current.size() + " passes=" + pass + " target=" + targets + " external=0");
+                        return;
+                    }
+                    previous = current;
+                }
+                throw new RuntimeRejected(RuntimeReason.unstable);
+            } catch (RuntimeRejected rejected) { throw rejected; }
+            catch (Exception | LinkageError failure) { throw new RuntimeRejected(RuntimeReason.enumeration); }
         }
     }
 

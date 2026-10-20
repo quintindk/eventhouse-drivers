@@ -202,6 +202,8 @@ public final class DriverTest {
                 test(expected.getMessage().equals("Invalid Eventhouse JDBC configuration."));
             }
         }
+        if (passed != 1701) throw new AssertionError("Prior regression count changed");
+        runtimePolicy();
         System.out.println("DriverTest PASS assertions=" + passed + " failures=0 (offline, scripted native boundary)");
         if (args.length == 1) {
             Properties nativeProperties = properties();
@@ -223,6 +225,107 @@ public final class DriverTest {
             System.out.println("NativeSmoke PASS product ABI0x00010003/all16symbols, configured-host open/close, invalid-handle next/current-cell and prepare/cancel/close. Dummy credentials, no query or network. assertions=" + passed);
         }
     }
+    static void runtimePolicy() {
+        for (String name : new String[] {"coreclr", "clrjit", "hostfxr", "hostpolicy", "nethost", "mscoree",
+                "clr", "mscorjit", "mscorwks", "mscorsvr", "sos"}) {
+            test(RcSmoke.RuntimePolicy.forbidden(name + ".dll"));
+            test(RcSmoke.RuntimePolicy.forbidden(name.toUpperCase(java.util.Locale.ROOT) + ".DLL"));
+            Path forbidden = Path.of("runtime-policy", name + ".dll").toAbsolutePath();
+            runtimeRejected(RcSmoke.RuntimeReason.external_runtime,
+                    () -> RcSmoke.RuntimePolicy.module(new java.util.HashMap<>(), 1, forbidden));
+        }
+        for (String name : new String[] {"jvm.dll", "java.dll", "jnidispatch.dll", "kernel32.dll", "psapi.dll",
+                "vcruntime140.dll", "msvcp140.dll", "notcoreclr.dll", "coreclr.dll.extra", "coreclr", ""}) {
+            test(!RcSmoke.RuntimePolicy.forbidden(name));
+        }
+        test(RcSmoke.RuntimePolicy.moduleCount(true, 8, 8) == 1);
+        test(RcSmoke.RuntimePolicy.moduleCount(true, 2048, 8) == 256);
+        test(RcSmoke.RuntimePolicy.moduleCount(true, 32768, 8) == 4096);
+        runtimeRejected(RcSmoke.RuntimeReason.enumeration, () -> RcSmoke.RuntimePolicy.moduleCount(false, 8, 8));
+        for (int bytes : new int[] {0, 1, 7, 9, 32776, -1, Integer.MIN_VALUE}) {
+            runtimeRejected(RcSmoke.RuntimeReason.bounds, () -> RcSmoke.RuntimePolicy.moduleCount(true, bytes, 8));
+        }
+        for (int width : new int[] {0, 4, 16}) {
+            runtimeRejected(RcSmoke.RuntimeReason.bounds, () -> RcSmoke.RuntimePolicy.moduleCount(true, 8, width));
+        }
+        test(RcSmoke.RuntimePolicy.complete(256, 256, 1));
+        test(RcSmoke.RuntimePolicy.complete(4096, 4096, 4));
+        test(!RcSmoke.RuntimePolicy.complete(257, 256, 1));
+        test(!RcSmoke.RuntimePolicy.complete(4096, 256, 3));
+        runtimeRejected(RcSmoke.RuntimeReason.truncation, () -> RcSmoke.RuntimePolicy.complete(257, 256, 4));
+        runtimeRejected(RcSmoke.RuntimeReason.bounds, () -> RcSmoke.RuntimePolicy.complete(0, 256, 1));
+        runtimeRejected(RcSmoke.RuntimeReason.bounds, () -> RcSmoke.RuntimePolicy.complete(4097, 256, 1));
+        runtimeRejected(RcSmoke.RuntimeReason.bounds, () -> RcSmoke.RuntimePolicy.complete(1, 255, 1));
+        runtimeRejected(RcSmoke.RuntimeReason.bounds, () -> RcSmoke.RuntimePolicy.complete(1, 4097, 1));
+        runtimeRejected(RcSmoke.RuntimeReason.bounds, () -> RcSmoke.RuntimePolicy.complete(1, 256, 0));
+        runtimeRejected(RcSmoke.RuntimeReason.bounds, () -> RcSmoke.RuntimePolicy.complete(1, 256, 5));
+        test(RcSmoke.RuntimePolicy.filename(3, new char[] {'a', 'b', 'c', 0}).equals("abc"));
+        for (int length : new int[] {-1, 0, 4, 5}) {
+            runtimeRejected(RcSmoke.RuntimeReason.truncation,
+                    () -> RcSmoke.RuntimePolicy.filename(length, new char[] {'a', 'b', 'c', 0}));
+        }
+        runtimeRejected(RcSmoke.RuntimeReason.truncation,
+                () -> RcSmoke.RuntimePolicy.filename(3, new char[] {'a', 0, 'c', 0}));
+        runtimeRejected(RcSmoke.RuntimeReason.truncation,
+                () -> RcSmoke.RuntimePolicy.filename(3, new char[] {'a', 'b', 'c', 'x'}));
+        for (int i = 0; i < 8; i++) {
+            RcSmoke.RuntimePolicy.sequence(i, RcSmoke.RuntimePolicy.CHECKPOINTS[i]);
+            test(true);
+        }
+        for (int index : new int[] {-1, 1, 8}) {
+            runtimeRejected(RcSmoke.RuntimeReason.sequence, () -> RcSmoke.RuntimePolicy.sequence(index, "pre_load"));
+        }
+        runtimeRejected(RcSmoke.RuntimeReason.sequence, () -> RcSmoke.RuntimePolicy.sequence(0, "arbitrary"));
+        String[][] recoveries = {{"cursor_cancel", "cancel_recovery"}, {"idle_deadline", "deadline_recovery"},
+            {"invalid_secret", "auth_reconnect"}};
+        for (String[] recovery : recoveries) {
+            test(RcSmoke.RuntimePolicy.recoveryCheckpoint(recovery[0], "pass").equals(recovery[1]));
+            for (String outcome : new String[] {"fail", "blocked_no_first_row", "blocked_deadline_before_first_row",
+                    "blocked_not_requested", "", "PASS"}) {
+                runtimeRejected(RcSmoke.RuntimeReason.workload,
+                        () -> RcSmoke.RuntimePolicy.recoveryCheckpoint(recovery[0], outcome));
+            }
+        }
+        runtimeRejected(RcSmoke.RuntimeReason.sequence, () -> RcSmoke.RuntimePolicy.recoveryCheckpoint("overcell", "pass"));
+        Path target = Path.of("runtime-policy", "eventhouse-engine.dll").toAbsolutePath();
+        Path jvm = target.resolveSibling("jvm.dll");
+        java.util.Map<Long, Path> modules = new java.util.HashMap<>();
+        RcSmoke.RuntimePolicy.module(modules, 1, jvm);
+        test(modules.size() == 1);
+        test(RcSmoke.RuntimePolicy.targetCount(modules, target, false) == 0);
+        runtimeRejected(RcSmoke.RuntimeReason.identity, () -> RcSmoke.RuntimePolicy.targetCount(modules, target, true));
+        runtimeRejected(RcSmoke.RuntimeReason.identity, () -> RcSmoke.RuntimePolicy.module(modules, 1, jvm));
+        runtimeRejected(RcSmoke.RuntimeReason.identity, () -> RcSmoke.RuntimePolicy.module(modules, 0, jvm));
+        runtimeRejected(RcSmoke.RuntimeReason.identity, () -> RcSmoke.RuntimePolicy.module(modules, 2, null));
+        runtimeRejected(RcSmoke.RuntimeReason.identity, () -> RcSmoke.RuntimePolicy.module(modules, 2, Path.of("relative.dll")));
+        RcSmoke.RuntimePolicy.module(modules, 2, target);
+        test(RcSmoke.RuntimePolicy.targetCount(modules, target, true) == 1);
+        runtimeRejected(RcSmoke.RuntimeReason.identity, () -> RcSmoke.RuntimePolicy.targetCount(modules, target, false));
+        test(!RcSmoke.RuntimePolicy.stable(null, modules, 1));
+        test(RcSmoke.RuntimePolicy.stable(java.util.Map.copyOf(modules), modules, 2));
+        test(RcSmoke.RuntimePolicy.stable(java.util.Map.copyOf(modules), modules, 4));
+        runtimeRejected(RcSmoke.RuntimeReason.bounds, () -> RcSmoke.RuntimePolicy.stable(modules, modules, 0));
+        runtimeRejected(RcSmoke.RuntimeReason.bounds, () -> RcSmoke.RuntimePolicy.stable(modules, modules, 5));
+        java.util.Map<Long, Path> changed = new java.util.HashMap<>(modules);
+        changed.put(1L, target.resolveSibling("java.dll"));
+        test(!RcSmoke.RuntimePolicy.stable(changed, modules, 3));
+        runtimeRejected(RcSmoke.RuntimeReason.unstable, () -> RcSmoke.RuntimePolicy.stable(changed, modules, 4));
+        runtimeRejected(RcSmoke.RuntimeReason.unstable, () -> RcSmoke.RuntimePolicy.stable(null, modules, 4));
+        changed.clear(); changed.put(3L, jvm); changed.put(2L, target);
+        test(!RcSmoke.RuntimePolicy.stable(changed, modules, 2));
+        RcSmoke.RuntimePolicy.module(modules, 3, target);
+        runtimeRejected(RcSmoke.RuntimeReason.identity, () -> RcSmoke.RuntimePolicy.targetCount(modules, target, true));
+        java.util.Map<Long, Path> wrongTarget = java.util.Map.of(1L,
+                target.resolveSibling("other").resolve("EVENTHOUSE-ENGINE.DLL"));
+        runtimeRejected(RcSmoke.RuntimeReason.identity, () -> RcSmoke.RuntimePolicy.targetCount(wrongTarget, target, false));
+        runtimeRejected(RcSmoke.RuntimeReason.identity, () -> RcSmoke.RuntimePolicy.targetCount(wrongTarget, target, true));
+    }
+
+    static void runtimeRejected(RcSmoke.RuntimeReason reason, Runnable action) {
+        try { action.run(); throw new AssertionError("Runtime policy accepted invalid input"); }
+        catch (RcSmoke.RuntimeRejected rejected) { test(rejected.reason == reason); }
+    }
+
     static Properties properties() {
         Properties p = new Properties();
         p.setProperty("tenantId", "11111111-1111-1111-1111-111111111111");

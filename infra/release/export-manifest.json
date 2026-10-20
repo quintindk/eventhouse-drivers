@@ -451,11 +451,11 @@
     },
     {
       "path": "src/jdbc/src/test/java/com/microsoft/eventhouse/jdbc/DriverTest.java",
-      "sha256": "85c86801439175164b59177b0657e19eb2b2a64f70920f87d9eeb2d94e1ff469"
+      "sha256": "27fa47a7e41dcb438b68123ae10c4685534f8748f2801f92ee626c182ca7efe9"
     },
     {
       "path": "src/jdbc/src/test/java/com/microsoft/eventhouse/jdbc/RcSmoke.java",
-      "sha256": "2c9b2fac038e11210de19b6fac7ba6d7bf5b5336d0ec6bd0a77ec380fab0176d"
+      "sha256": "526ea9b5524bd36d4b6ad46d9567326db287f787e74d5723068671794a3ec7e0"
     },
     {
       "path": "src/jdbc/src/test/java/com/microsoft/eventhouse/jdbc/TransactionsSmoke.java",
