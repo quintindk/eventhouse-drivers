@@ -1,0 +1,548 @@
+{
+  "abi": "0x00010003",
+  "files": [
+    {
+      "path": ".github/workflows/jdbc-windows.yml",
+      "sha256": "07c2a7ecbd7dfe09af2790547a791df430295c8cdc096a4a73658a0ae48c5a5f"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "0a98b42a847e2168b5dce5b5fcf583238265de9d64b599c32d997aad93d8b863"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "798852e105b610cd6f9197a32041c7fbbd28125e9ce030e0ef0e61c5b9433eec"
+    },
+    {
+      "path": "README.md",
+      "sha256": "c178fcd5527ea9fa9121c0159f07da6fb77eeb24b341435bbf9c8a45537efa9f"
+    },
+    {
+      "path": "SECURITY.md",
+      "sha256": "8626c5d135a253a44d4e086115a2113d2c09584c670a4802459139618bf026a7"
+    },
+    {
+      "path": "contracts/dynamic-json.md",
+      "sha256": "8c901ddc05995ae58fa7585670b68efd8e917125b0f259ab2143e89999faebb5"
+    },
+    {
+      "path": "contracts/eventhouse-engine.h",
+      "sha256": "6d9eddb093b94f911debf63f6c89280c7d090b446dafcde65c2c073fafe1b76e"
+    },
+    {
+      "path": "contracts/operation-control.md",
+      "sha256": "add093c155e0904be1fc8b61b799615ed40f9b89d5ebe9cebf63a378c392de6b"
+    },
+    {
+      "path": "contracts/product-abi.md",
+      "sha256": "280104ce06091f506fa2e4c8040cde8079509ba6740f5e18ec27e6331cdfcd03"
+    },
+    {
+      "path": "contracts/streaming-results.md",
+      "sha256": "2c35705839df38adaa880f4f9ec4bbb00011417ef1d0ee48c9e0d29fa4998f8c"
+    },
+    {
+      "path": "docs/BUILD-INSTALL.md",
+      "sha256": "31f9899b6f2d76763f458aab531af2ad932d8caf8afb4686dd0a05af70034f51"
+    },
+    {
+      "path": "global.json",
+      "sha256": "e31f97a02d150daddff5aa324c710697796ef27bc34c7df850920e17b5d7f6e2"
+    },
+    {
+      "path": "infra/release/notice-materials.json",
+      "sha256": "73f57232a0efcc64c7370beb62a7e9c2edc5eaa99e9dd2a3305f6b54b72e2b63"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Bcl.AsyncInterfaces-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.Configuration.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.DependencyInjection.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.Diagnostics.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.FileProviders.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.Hosting.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.Logging.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.Options-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.Primitives-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/cache-texts/System.Memory.Data-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/cache-texts/System.Security.Cryptography.ProtectedData-4.5.0/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "licences/cache-texts/System.Security.Cryptography.ProtectedData-4.5.0/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "7864a01e2fdef7e8fdf81b906efb1466f083206affea7ba7e6dadea429754765"
+    },
+    {
+      "path": "licences/jna-native-attribution.txt",
+      "sha256": "d6ba4a814d89f757ddf22224d290ee7b81ef016fdc289f79577611da8c71bf02"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.AspNetCore.App.Runtime.win-arm64-10.0.13/LICENSE.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.AspNetCore.App.Runtime.win-arm64-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "307d014f65d8482314f1400ddeae7a0cbabb96c2207bcc77f6233cc10588e5d9"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Bcl.AsyncInterfaces-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.DotNet.ILCompiler-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.Configuration.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.DependencyInjection.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.Diagnostics.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.FileProviders.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.Hosting.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.Logging.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.Options-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.Primitives-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.NET.ILLink.Tasks-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.NETCore.App.Runtime.NativeAOT.win-arm64-10.0.13/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.NETCore.App.Runtime.NativeAOT.win-arm64-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.NETCore.App.Runtime.win-arm64-10.0.13/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.NETCore.App.Runtime.win-arm64-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.WindowsDesktop.App.Runtime.win-arm64-10.0.13/LICENSE",
+      "sha256": "a89886665765362eb77e0f8e26602c924520041d1711b2eedc136434fe4d01ab"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/System.Memory.Data-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/System.Security.Cryptography.ProtectedData-4.5.0/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/System.Security.Cryptography.ProtectedData-4.5.0/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "7864a01e2fdef7e8fdf81b906efb1466f083206affea7ba7e6dadea429754765"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/jna-5.17.0/META-INF/AL2.0",
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/jna-5.17.0/META-INF/LGPL2.1",
+      "sha256": "eea173a556abac0370461e57e12aab266894ea6be3874c2be05fd87871f75449"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/jna-5.17.0/META-INF/LICENSE",
+      "sha256": "07c938b23950ab7d47a24ef35f9f5da3a05ae164278dc959ad6994135ed59ff1"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/runtime.win-arm64.Microsoft.DotNet.ILCompiler-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.AspNetCore.App.Runtime.win-x64-10.0.13/LICENSE.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.AspNetCore.App.Runtime.win-x64-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "307d014f65d8482314f1400ddeae7a0cbabb96c2207bcc77f6233cc10588e5d9"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Bcl.AsyncInterfaces-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.DotNet.ILCompiler-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.Configuration.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.DependencyInjection.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.Diagnostics.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.FileProviders.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.Hosting.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.Logging.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.Options-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.Primitives-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.NET.ILLink.Tasks-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.NETCore.App.Runtime.NativeAOT.win-x64-10.0.13/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.NETCore.App.Runtime.NativeAOT.win-x64-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.NETCore.App.Runtime.win-x64-10.0.13/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.NETCore.App.Runtime.win-x64-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.WindowsDesktop.App.Runtime.win-x64-10.0.13/LICENSE",
+      "sha256": "a89886665765362eb77e0f8e26602c924520041d1711b2eedc136434fe4d01ab"
+    },
+    {
+      "path": "licences/restore-inputs/x64/System.Memory.Data-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/restore-inputs/x64/System.Security.Cryptography.ProtectedData-4.5.0/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b"
+    },
+    {
+      "path": "licences/restore-inputs/x64/System.Security.Cryptography.ProtectedData-4.5.0/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "7864a01e2fdef7e8fdf81b906efb1466f083206affea7ba7e6dadea429754765"
+    },
+    {
+      "path": "licences/restore-inputs/x64/jna-5.17.0/META-INF/AL2.0",
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    {
+      "path": "licences/restore-inputs/x64/jna-5.17.0/META-INF/LGPL2.1",
+      "sha256": "eea173a556abac0370461e57e12aab266894ea6be3874c2be05fd87871f75449"
+    },
+    {
+      "path": "licences/restore-inputs/x64/jna-5.17.0/META-INF/LICENSE",
+      "sha256": "07c938b23950ab7d47a24ef35f9f5da3a05ae164278dc959ad6994135ed59ff1"
+    },
+    {
+      "path": "licences/restore-inputs/x64/runtime.win-x64.Microsoft.DotNet.ILCompiler-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21"
+    },
+    {
+      "path": "licences/upstream/azure-core.txt",
+      "sha256": "9b45236978bb5cd5de992021769e1eeaa79f0116d3b02cf8ba065a1ed603d5fa"
+    },
+    {
+      "path": "licences/upstream/azure-identity.txt",
+      "sha256": "9b45236978bb5cd5de992021769e1eeaa79f0116d3b02cf8ba065a1ed603d5fa"
+    },
+    {
+      "path": "licences/upstream/dotnet-runtime-10.0.13.txt",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310"
+    },
+    {
+      "path": "licences/upstream/dotnet-runtime-10.0.3.txt",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310"
+    },
+    {
+      "path": "licences/upstream/identitymodel.txt",
+      "sha256": "b09ac0e46520eec4ee7b16af87d4ccbf8180551f3b2ff0f6c9b4f3ddcd585640"
+    },
+    {
+      "path": "licences/upstream/jna-libffi.txt",
+      "sha256": "2c9c2acb9743e6b007b91350475308aee44691d96aa20eacef8e199988c8c388"
+    },
+    {
+      "path": "licences/upstream/msal.txt",
+      "sha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c"
+    },
+    {
+      "path": "licences/upstream/runtime-brotli.txt",
+      "sha256": "3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94"
+    },
+    {
+      "path": "licences/upstream/system-clientmodel.txt",
+      "sha256": "9b45236978bb5cd5de992021769e1eeaa79f0116d3b02cf8ba065a1ed603d5fa"
+    },
+    {
+      "path": "src/engine/Authentication.cs",
+      "sha256": "d15a2306f187932bac42aed626604ca51528055168ab49be80d4b0aaea8bca71"
+    },
+    {
+      "path": "src/engine/Diagnostics.cs",
+      "sha256": "7fc68f3d7dd592245e8f2bed3789c6666b66e4c935668bcfce1892f7b6941590"
+    },
+    {
+      "path": "src/engine/EngineConnection.cs",
+      "sha256": "dec4bdfdc0adab06cad190a517f2dd34f7e8e2e61af8bc6e4ab4d94eb778351d"
+    },
+    {
+      "path": "src/engine/EngineOperation.cs",
+      "sha256": "dd065c2bce1926bbfaa10f188a6eec2df8b2a095117f52e53341d818ab8b3648"
+    },
+    {
+      "path": "src/engine/Eventhouse.Engine.Spike.csproj",
+      "sha256": "e37d3fbd4e8e10c7e799db2a83720184cc56b88a12384acfd0877615ac9ca7c1"
+    },
+    {
+      "path": "src/engine/Exports.cs",
+      "sha256": "b26175a5ffeefc40b0400ca7645f43db849fef6393606244f784d510b47cd68d"
+    },
+    {
+      "path": "src/engine/FabricEndpoint.cs",
+      "sha256": "b515b7ee78ba94326b1c3000385cb67665bc14d98394b956b8e50f88cb795f05"
+    },
+    {
+      "path": "src/engine/Handles.cs",
+      "sha256": "928f565b7548dabd22015ee5577d9aab6abb8a380e0aebad3c6b12e16e138f0b"
+    },
+    {
+      "path": "src/engine/NativeBoundary.cs",
+      "sha256": "67c2072dc1589cbd8e56f6caa1269a72c23b1de36d3552b3bd600024bf8ac081"
+    },
+    {
+      "path": "src/engine/RestProtocol.cs",
+      "sha256": "b29b3b4832e9528d0933ede002c24fb8f4ca3fb160cc2c78d5cb2cdd8b752dd2"
+    },
+    {
+      "path": "src/engine/SpikeContract.cs",
+      "sha256": "8899f965ee8a892d132ae62d0bf1a796507cd049ee2ca5da6ebaab47b20298e5"
+    },
+    {
+      "path": "src/engine/StreamingParser.cs",
+      "sha256": "ebed0741da658bc11e4d403ce65d9790864901a11144dc373c73a2335ba8fa91"
+    },
+    {
+      "path": "src/engine/StreamingResult.cs",
+      "sha256": "17114cf9bbb0c115cb3ee6e30c1c2acb70d35ad14b83aece9c23aeaef1f9fac0"
+    },
+    {
+      "path": "src/engine/packages.linux-arm64.lock.json",
+      "sha256": "8001e2b1ab1db90c730771822584879f681c58239750da40afab89cb8659c48c"
+    },
+    {
+      "path": "src/engine/packages.win-arm64.lock.json",
+      "sha256": "80ab1b9cb7ffe4cb4d2d66b86153f05f5b3cd9a44ad1863df84fe00ca06ac17b"
+    },
+    {
+      "path": "src/engine/packages.win-x64.lock.json",
+      "sha256": "8853346a4c00bf83bed32675052c9bfcdc0126394a6fa4256ee074a86d0feb17"
+    },
+    {
+      "path": "src/jdbc/Run-Windows.ps1",
+      "sha256": "52123c3a7263b2dc524bcc09379ecbd776d21ff72bed43dc4e69e9188746ee09"
+    },
+    {
+      "path": "src/jdbc/THIRD-PARTY-NOTICES.md",
+      "sha256": "eb1281d3b32c1ed1a2d17aa54bd184eb40f68c633220ed7986df4e7eb9ac408a"
+    },
+    {
+      "path": "src/jdbc/src/main/java/com/microsoft/eventhouse/jdbc/Configuration.java",
+      "sha256": "0bb5e4d9823c009af3dab00f3b3ec9abcde22aa21d9ee3611becdcf5a8932be6"
+    },
+    {
+      "path": "src/jdbc/src/main/java/com/microsoft/eventhouse/jdbc/EventhouseDriver.java",
+      "sha256": "b4a6a334002e8c78c01ab354114f25c0e656f86979115cfc38bce2a5b9e5ff44"
+    },
+    {
+      "path": "src/jdbc/src/main/java/com/microsoft/eventhouse/jdbc/JdbcObjects.java",
+      "sha256": "694bee9a98d249cb17258bf73553f2217fceeb4d12298091554237fd9ecbeefb"
+    },
+    {
+      "path": "src/jdbc/src/main/java/com/microsoft/eventhouse/jdbc/NativeEngine.java",
+      "sha256": "4ce6b62ce7f9d0fd0e26d9dfee56c02aa57bdbd133be1f7abbd8e15209a7baef"
+    },
+    {
+      "path": "src/jdbc/src/main/java/com/microsoft/eventhouse/jdbc/SpikeLibrary.java",
+      "sha256": "3f8d8339dd0443fdf8a9379d3887315527b75f47171bd035f385f1ed0cd5227a"
+    },
+    {
+      "path": "src/jdbc/src/main/java/com/microsoft/eventhouse/jdbc/Utf8.java",
+      "sha256": "f770f0f1da1bd22a9996c836dbe7746e6b95357edb930c71fcbd208bab208893"
+    },
+    {
+      "path": "src/jdbc/src/main/java/com/microsoft/eventhouse/jdbc/Values.java",
+      "sha256": "93c2a574d6c06263376f9ea2d87f2ab88ad7f36688e10ec0cbe532612e61332a"
+    },
+    {
+      "path": "src/jdbc/src/main/resources/META-INF/services/java.sql.Driver",
+      "sha256": "dacd84d3205ffbf9694a5aff58054ad53245eeabe006e40144a54ec8376170b4"
+    },
+    {
+      "path": "src/jdbc/src/test/java/com/microsoft/eventhouse/jdbc/DriverTest.java",
+      "sha256": "85c86801439175164b59177b0657e19eb2b2a64f70920f87d9eeb2d94e1ff469"
+    },
+    {
+      "path": "src/jdbc/src/test/java/com/microsoft/eventhouse/jdbc/RcSmoke.java",
+      "sha256": "2c9b2fac038e11210de19b6fac7ba6d7bf5b5336d0ec6bd0a77ec380fab0176d"
+    },
+    {
+      "path": "src/jdbc/src/test/java/com/microsoft/eventhouse/jdbc/TransactionsSmoke.java",
+      "sha256": "84347dd5f244ffe22663bf0ed12aba24c85f2697bbab2fc2f733cab1d8c50ded"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/empty-query-status.json",
+      "sha256": "9461048887cbbdca9ff6d12dac002a91042a0933192f59a3c920a3427f6e37ea"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/extra-column-property.json",
+      "sha256": "c676ab8d9d98fe3da44f0c9ca91a389d9f0d2b652be9544de507052a89c21dd3"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/extra-root-property.json",
+      "sha256": "7070a56d79a0fdb742004e54ebd2118ac2ec0dbb3427a41e4e41ad3aa7626927"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/extra-table-property.json",
+      "sha256": "4603ea28d43651790bedd7c57bbe5d163503a24107346138112a1052a7c8bded"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/failed-query-status.json",
+      "sha256": "cc68b3b7b50ff35129b15b55527d61ae5d9deab42ffee12baf4e31d03a18779c"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/feasibility-representation.json",
+      "sha256": "c1f28dd35eb57c51e85f8eb6f5b4f9781ab29097f98fabb3416b5eb449234a61"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/invalid-metadata-table-name.json",
+      "sha256": "11de7a4b4b3e378a539a217fbe33a2814839246658a641aa08e343fc0f2bf9a0"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/malformed.json",
+      "sha256": "dee2da6953600465e8fd10d6d8443913fabcff49ecdba708918e68bdd9218bcc"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/metadata-row-width.json",
+      "sha256": "1a2a2e232296cd034e31326ac78e144dc54245b0e5adcb505a50f8fb8a4491c9"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/oneapi-error.json",
+      "sha256": "72ef873937bcf0ccb13bff77e11354fc560dc5717300e96a0917e69dd6c0ccae"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/typed-null-success.json",
+      "sha256": "bfdedc51c9f11b9e66ae749e37711462b41cd8f774fb612479f8a375489b4d2d"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/unknown-metadata-table.json",
+      "sha256": "65d0ff7ea04250075f5dc23c4a701717fdb480d143065ad6b000f4f271950453"
+    },
+    {
+      "path": "tests/contract/wp003/fixtures/wrong-row-width.json",
+      "sha256": "378f5f27af5c4e7823951826892faa8d42bc1a55610cbbcf22f35cf66625351f"
+    },
+    {
+      "path": "tests/contract/wp003/managed/Eventhouse.Engine.Spike.ContractTests.csproj",
+      "sha256": "498c1f14e5c5612215505061ea258cd11abe489eb51299337e7e7d9ae6c9c969"
+    },
+    {
+      "path": "tests/contract/wp003/managed/Program.cs",
+      "sha256": "f04b56c2a58fa88b259fbf364f7c7dee769a2772cb7669286c55fcc90eff8822"
+    },
+    {
+      "path": "tests/contract/wp003/managed/packages.linux-arm64.lock.json",
+      "sha256": "e9906307c272c3bbd51efcac5f85c328ca1c1c9b9d410a952f5f39d03b34333b"
+    },
+    {
+      "path": "tests/contract/wp003/managed/packages.product.linux-arm64.lock.json",
+      "sha256": "ff4c5c554233fd2441068f94acf709f9f36dfb53f782514e9ccf5bd46039d1e5"
+    },
+    {
+      "path": "tests/contract/wp003/managed/packages.product.win-arm64.lock.json",
+      "sha256": "e7bed3e481590d92b7ecc4f3eddba441e9974c15e088b26d68888f4992a9c5ae"
+    },
+    {
+      "path": "tests/contract/wp003/managed/packages.product.win-x64.lock.json",
+      "sha256": "232c9c14a07c27a3cbeae79f2aee1928d4ddf1246abc21485a68cae57d900028"
+    }
+  ],
+  "limitations": [
+    "No fresh builds, live queries, Windows runs, package validation or release approval in this preparation",
+    "Literal clean Windows without installed modern .NET gate retained",
+    "Native attribution and WindowsDesktop notice aggregation incomplete"
+  ],
+  "product_linux_managed_lock_sha256": "ff4c5c554233fd2441068f94acf709f9f36dfb53f782514e9ccf5bd46039d1e5",
+  "profile": "experimental JDBC RC1 public source preparation",
+  "required_product_exports": 16,
+  "schema_version": 1,
+  "self_exclusion": "This manifest excludes itself. Its hash is held by the independent export receipt.",
+  "status": "not approved for publication"
+}

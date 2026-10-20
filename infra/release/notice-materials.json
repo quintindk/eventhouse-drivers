@@ -1,0 +1,643 @@
+{
+  "schema_version": 1,
+  "materials": [
+    {
+      "path": "licences/upstream/dotnet-runtime-10.0.3.txt",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "source_url": "https://raw.githubusercontent.com/dotnet/dotnet/c2435c3e0f46de784341ac3ed62863ce77e117b4/src/runtime/LICENSE.TXT",
+      "kind": "full-licence-text"
+    },
+    {
+      "path": "licences/upstream/dotnet-runtime-10.0.13.txt",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "source_url": "https://raw.githubusercontent.com/dotnet/dotnet/4099f83977f4d29604a9aeb971fb0a7bc1d5f699/src/runtime/LICENSE.TXT",
+      "kind": "full-licence-text"
+    },
+    {
+      "path": "licences/upstream/azure-core.txt",
+      "sha256": "9b45236978bb5cd5de992021769e1eeaa79f0116d3b02cf8ba065a1ed603d5fa",
+      "source_url": "https://raw.githubusercontent.com/Azure/azure-sdk-for-net/c94768fafa4dd93eef9f7c90c92522434fcedb32/LICENSE.txt",
+      "kind": "full-licence-text"
+    },
+    {
+      "path": "licences/upstream/azure-identity.txt",
+      "sha256": "9b45236978bb5cd5de992021769e1eeaa79f0116d3b02cf8ba065a1ed603d5fa",
+      "source_url": "https://raw.githubusercontent.com/Azure/azure-sdk-for-net/f7400e4471111bf7f2154834022786119acbdd77/LICENSE.txt",
+      "kind": "full-licence-text"
+    },
+    {
+      "path": "licences/upstream/system-clientmodel.txt",
+      "sha256": "9b45236978bb5cd5de992021769e1eeaa79f0116d3b02cf8ba065a1ed603d5fa",
+      "source_url": "https://raw.githubusercontent.com/Azure/azure-sdk-for-net/6b41983be6c45a7439db0b25f0c0874d7c867ed9/LICENSE.txt",
+      "kind": "full-licence-text"
+    },
+    {
+      "path": "licences/upstream/msal.txt",
+      "sha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c",
+      "source_url": "https://raw.githubusercontent.com/AzureAD/microsoft-authentication-library-for-dotnet/d5d7de6b103f0d9dd7bca9bf13cbb9f3da37bc9f/LICENSE",
+      "kind": "full-licence-text"
+    },
+    {
+      "path": "licences/upstream/identitymodel.txt",
+      "sha256": "b09ac0e46520eec4ee7b16af87d4ccbf8180551f3b2ff0f6c9b4f3ddcd585640",
+      "source_url": "https://raw.githubusercontent.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/c8f7d87bcda35557a68f6cb9c55856a2ee733856/LICENSE.txt",
+      "kind": "full-licence-text"
+    },
+    {
+      "path": "licences/upstream/jna-libffi.txt",
+      "sha256": "2c9c2acb9743e6b007b91350475308aee44691d96aa20eacef8e199988c8c388",
+      "source_url": "https://raw.githubusercontent.com/java-native-access/jna/5.17.0/native/libffi/LICENSE",
+      "kind": "full-licence-text"
+    },
+    {
+      "path": "licences/upstream/runtime-brotli.txt",
+      "sha256": "3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94",
+      "source_url": "https://raw.githubusercontent.com/dotnet/runtime/v10.0.13/src/native/external/brotli/LICENSE",
+      "kind": "full-licence-text"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.AspNetCore.App.Runtime.win-arm64-10.0.13/LICENSE.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.AspNetCore.App.Runtime.win-arm64-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "307d014f65d8482314f1400ddeae7a0cbabb96c2207bcc77f6233cc10588e5d9",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Bcl.AsyncInterfaces-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.DotNet.ILCompiler-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.Configuration.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.DependencyInjection.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.Diagnostics.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.FileProviders.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.Hosting.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.Logging.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.Options-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.Extensions.Primitives-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.NET.ILLink.Tasks-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.NETCore.App.Runtime.NativeAOT.win-arm64-10.0.13/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.NETCore.App.Runtime.NativeAOT.win-arm64-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.NETCore.App.Runtime.win-arm64-10.0.13/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.NETCore.App.Runtime.win-arm64-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/Microsoft.WindowsDesktop.App.Runtime.win-arm64-10.0.13/LICENSE",
+      "sha256": "a89886665765362eb77e0f8e26602c924520041d1711b2eedc136434fe4d01ab",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/System.Memory.Data-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/System.Security.Cryptography.ProtectedData-4.5.0/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/System.Security.Cryptography.ProtectedData-4.5.0/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "7864a01e2fdef7e8fdf81b906efb1466f083206affea7ba7e6dadea429754765",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/jna-5.17.0/META-INF/AL2.0",
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/jna-5.17.0/META-INF/LGPL2.1",
+      "sha256": "eea173a556abac0370461e57e12aab266894ea6be3874c2be05fd87871f75449",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/jna-5.17.0/META-INF/LICENSE",
+      "sha256": "07c938b23950ab7d47a24ef35f9f5da3a05ae164278dc959ad6994135ed59ff1",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/arm64/runtime.win-arm64.Microsoft.DotNet.ILCompiler-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.AspNetCore.App.Runtime.win-x64-10.0.13/LICENSE.txt",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.AspNetCore.App.Runtime.win-x64-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "307d014f65d8482314f1400ddeae7a0cbabb96c2207bcc77f6233cc10588e5d9",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Bcl.AsyncInterfaces-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.DotNet.ILCompiler-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.Configuration.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.DependencyInjection.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.Diagnostics.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.FileProviders.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.Hosting.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.Logging.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.Options-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.Extensions.Primitives-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.NET.ILLink.Tasks-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.NETCore.App.Runtime.NativeAOT.win-x64-10.0.13/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.NETCore.App.Runtime.NativeAOT.win-x64-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.NETCore.App.Runtime.win-x64-10.0.13/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.NETCore.App.Runtime.win-x64-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/Microsoft.WindowsDesktop.App.Runtime.win-x64-10.0.13/LICENSE",
+      "sha256": "a89886665765362eb77e0f8e26602c924520041d1711b2eedc136434fe4d01ab",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/System.Memory.Data-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/System.Security.Cryptography.ProtectedData-4.5.0/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/System.Security.Cryptography.ProtectedData-4.5.0/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "7864a01e2fdef7e8fdf81b906efb1466f083206affea7ba7e6dadea429754765",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/jna-5.17.0/META-INF/AL2.0",
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/jna-5.17.0/META-INF/LGPL2.1",
+      "sha256": "eea173a556abac0370461e57e12aab266894ea6be3874c2be05fd87871f75449",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/jna-5.17.0/META-INF/LICENSE",
+      "sha256": "07c938b23950ab7d47a24ef35f9f5da3a05ae164278dc959ad6994135ed59ff1",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/restore-inputs/x64/runtime.win-x64.Microsoft.DotNet.ILCompiler-10.0.13/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Bcl.AsyncInterfaces-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.Configuration.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.DependencyInjection.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.Diagnostics.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.FileProviders.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.Hosting.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.Logging.Abstractions-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.Options-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/cache-texts/Microsoft.Extensions.Primitives-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/cache-texts/System.Memory.Data-10.0.3/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "6d15e10a101c6bfff2ab4429ed061bf76c456fc4b23ad6b03e0d0f8377148a21",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/cache-texts/System.Security.Cryptography.ProtectedData-4.5.0/LICENSE.TXT",
+      "sha256": "d7a68596ab69b06f51ca278a6545148e4269a9381c26d597c13df5d88e08cf5b",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/cache-texts/System.Security.Cryptography.ProtectedData-4.5.0/THIRD-PARTY-NOTICES.TXT",
+      "sha256": "7864a01e2fdef7e8fdf81b906efb1466f083206affea7ba7e6dadea429754765",
+      "kind": "exact-package-notice-text",
+      "scope": "restore-input attribution, not proof of linked runtime code"
+    },
+    {
+      "path": "licences/jna-native-attribution.txt",
+      "sha256": "d6ba4a814d89f757ddf22224d290ee7b81ef016fdc289f79577611da8c71bf02",
+      "kind": "attribution"
+    }
+  ],
+  "component_full_licences": [
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/azure-core.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/Azure/azure-sdk-for-net/c94768fafa4dd93eef9f7c90c92522434fcedb32/LICENSE.txt",
+      "package": "Azure.Core",
+      "sha256": "9b45236978bb5cd5de992021769e1eeaa79f0116d3b02cf8ba065a1ed603d5fa",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "1.53.0"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/azure-identity.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/Azure/azure-sdk-for-net/f7400e4471111bf7f2154834022786119acbdd77/LICENSE.txt",
+      "package": "Azure.Identity",
+      "sha256": "9b45236978bb5cd5de992021769e1eeaa79f0116d3b02cf8ba065a1ed603d5fa",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "1.21.0"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.3.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/c2435c3e0f46de784341ac3ed62863ce77e117b4/src/runtime/LICENSE.TXT",
+      "package": "Microsoft.Bcl.AsyncInterfaces",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.3"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.13.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/4099f83977f4d29604a9aeb971fb0a7bc1d5f699/src/runtime/LICENSE.TXT",
+      "package": "Microsoft.DotNet.ILCompiler",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.13"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.3.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/c2435c3e0f46de784341ac3ed62863ce77e117b4/src/runtime/LICENSE.TXT",
+      "package": "Microsoft.Extensions.Configuration.Abstractions",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.3"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.3.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/c2435c3e0f46de784341ac3ed62863ce77e117b4/src/runtime/LICENSE.TXT",
+      "package": "Microsoft.Extensions.DependencyInjection.Abstractions",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.3"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.3.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/c2435c3e0f46de784341ac3ed62863ce77e117b4/src/runtime/LICENSE.TXT",
+      "package": "Microsoft.Extensions.Diagnostics.Abstractions",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.3"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.3.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/c2435c3e0f46de784341ac3ed62863ce77e117b4/src/runtime/LICENSE.TXT",
+      "package": "Microsoft.Extensions.FileProviders.Abstractions",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.3"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.3.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/c2435c3e0f46de784341ac3ed62863ce77e117b4/src/runtime/LICENSE.TXT",
+      "package": "Microsoft.Extensions.Hosting.Abstractions",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.3"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.3.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/c2435c3e0f46de784341ac3ed62863ce77e117b4/src/runtime/LICENSE.TXT",
+      "package": "Microsoft.Extensions.Logging.Abstractions",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.3"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.3.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/c2435c3e0f46de784341ac3ed62863ce77e117b4/src/runtime/LICENSE.TXT",
+      "package": "Microsoft.Extensions.Options",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.3"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.3.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/c2435c3e0f46de784341ac3ed62863ce77e117b4/src/runtime/LICENSE.TXT",
+      "package": "Microsoft.Extensions.Primitives",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.3"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/msal.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/AzureAD/microsoft-authentication-library-for-dotnet/d5d7de6b103f0d9dd7bca9bf13cbb9f3da37bc9f/LICENSE",
+      "package": "Microsoft.Identity.Client",
+      "sha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "4.83.1"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/msal.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/AzureAD/microsoft-authentication-library-for-dotnet/d5d7de6b103f0d9dd7bca9bf13cbb9f3da37bc9f/LICENSE",
+      "package": "Microsoft.Identity.Client.Extensions.Msal",
+      "sha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "4.83.1"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/identitymodel.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/c8f7d87bcda35557a68f6cb9c55856a2ee733856/LICENSE.txt",
+      "package": "Microsoft.IdentityModel.Abstractions",
+      "sha256": "b09ac0e46520eec4ee7b16af87d4ccbf8180551f3b2ff0f6c9b4f3ddcd585640",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "8.14.0"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.13.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/4099f83977f4d29604a9aeb971fb0a7bc1d5f699/src/runtime/LICENSE.TXT",
+      "package": "Microsoft.NET.ILLink.Tasks",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.13"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/system-clientmodel.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/Azure/azure-sdk-for-net/6b41983be6c45a7439db0b25f0c0874d7c867ed9/LICENSE.txt",
+      "package": "System.ClientModel",
+      "sha256": "9b45236978bb5cd5de992021769e1eeaa79f0116d3b02cf8ba065a1ed603d5fa",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "1.10.0"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.3.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/c2435c3e0f46de784341ac3ed62863ce77e117b4/src/runtime/LICENSE.TXT",
+      "package": "System.Memory.Data",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.3"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.13.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/4099f83977f4d29604a9aeb971fb0a7bc1d5f699/src/runtime/LICENSE.TXT",
+      "package": "runtime.win-arm64.Microsoft.DotNet.ILCompiler",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.13"
+    },
+    {
+      "licence": "MIT",
+      "material": "licences/upstream/dotnet-runtime-10.0.13.txt",
+      "nuspec_copyright": "\u00a9 Microsoft Corporation. All rights reserved.",
+      "official_source": "https://raw.githubusercontent.com/dotnet/dotnet/4099f83977f4d29604a9aeb971fb0a7bc1d5f699/src/runtime/LICENSE.TXT",
+      "package": "runtime.win-x64.Microsoft.DotNet.ILCompiler",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "status": "pinned-source attribution mapping; distribution sufficiency requires review",
+      "version": "10.0.13"
+    }
+  ],
+  "limitations": [
+    "WindowsDesktop third-party aggregation unresolved",
+    "Exact JNA/libffi and NativeAOT/Brotli binary-to-source attribution unverified",
+    "Download/build inventory is not a linker composition attestation"
+  ]
+}

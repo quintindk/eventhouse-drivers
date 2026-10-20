@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PublishAot>true</PublishAot>
+    <NativeLib>Shared</NativeLib>
+    <IsAotCompatible>true</IsAotCompatible>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
+    <ILLinkTreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</ILLinkTreatWarningsAsErrors>
+    <IlcTreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</IlcTreatWarningsAsErrors>
+    <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <DefineConstants Condition="'$(EventhouseProduct)' != 'true'">$(DefineConstants);WP003_SPIKE_TEST_HOOKS</DefineConstants>
+    <DefineConstants Condition="'$(EventhouseProduct)' == 'true'">$(DefineConstants);EVENTHOUSE_PRODUCT</DefineConstants>
+    <AssemblyName Condition="'$(EventhouseProduct)' == 'true'">eventhouse-engine</AssemblyName>
+    <!-- Keep prior local outputs excluded when a profile uses external build paths. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin/**;obj/**</DefaultItemExcludes>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.21.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Eventhouse.Engine.Spike.ContractTests" />
+  </ItemGroup>
+</Project>

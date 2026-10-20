@@ -1,0 +1,14 @@
+{
+  "Tables": [
+    {
+      "TableName": "Table_0",
+      "Columns": [
+        { "ColumnName": "int_value", "DataType": "Int32", "ColumnType": "int" },
+        { "ColumnName": "null_value", "DataType": "Int32", "ColumnType": "int" },
+        { "ColumnName": "text_value", "DataType": "String", "ColumnType": "string" },
+        { "ColumnName": "empty_text", "DataType": "String", "ColumnType": "string" }
+      ],
+      "Rows": [[42, null, "hello", ""]]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "SyntheticFailure",
+    "message": "fixture text must never cross the native diagnostic boundary"
+  }
+}

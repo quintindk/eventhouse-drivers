@@ -1,0 +1,95 @@
+name: Experimental JDBC Windows qualification
+
+on:
+  workflow_dispatch:
+    inputs:
+      architecture:
+        description: 'Native qualification targets. Dispatch requires separate human approval.'
+        type: choice
+        required: true
+        default: both
+        options:
+          - both
+          - x64
+          - arm64
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jdbc-windows-qualification
+  cancel-in-progress: false
+
+jobs:
+  jdbc:
+    if: >-
+      github.repository == 'quintindk/eventhouse-drivers' &&
+      github.ref == 'refs/heads/main' &&
+      github.actor_id == '25738774' &&
+      github.event_name == 'workflow_dispatch' &&
+      github.triggering_actor == 'quintindk' &&
+      (inputs.architecture == 'both' || inputs.architecture == 'x64' || inputs.architecture == 'arm64')
+    strategy:
+      fail-fast: false
+      matrix:
+        # Each target runs natively. No emulation or 32-bit x86 fallback.
+        architecture: ${{ fromJSON(inputs.architecture == 'both' && '["x64","arm64"]' || format('["{0}"]', inputs.architecture)) }}
+    runs-on: ${{ matrix.architecture == 'arm64' && 'windows-11-arm' || 'windows-2025' }}
+    environment: eventhouse-live-test
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout dispatched revision
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Set up locked .NET SDK
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+        with:
+          dotnet-version: 10.0.113
+
+      # Install explicitly for each native architecture. Never assume an image's
+      # JAVA_HOME_21/25_* inventory or fall back to an emulated x64 JDK on ARM64.
+      - name: Set up native Java 21
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: microsoft
+          java-version: '21.0.11'
+          architecture: ${{ matrix.architecture }}
+          overwrite-settings: false
+
+      - name: Record Java 21 installation
+        run: '"EVENTHOUSE_JDK_21=$env:JAVA_HOME" >> $env:GITHUB_ENV'
+
+      - name: Set up native Java 25
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: microsoft
+          java-version: '25.0.3'
+          architecture: ${{ matrix.architecture }}
+          overwrite-settings: false
+
+      - name: Record Java 25 installation
+        run: '"EVENTHOUSE_JDK_25=$env:JAVA_HOME" >> $env:GITHUB_ENV'
+
+      - name: Build unsigned RC and test extracted product on Java 21 and 25 without credentials
+        run: ./src/jdbc/Run-Windows.ps1 -Phase Build -Runtime win-${{ matrix.architecture }} -Architecture ${{ matrix.architecture }}
+
+      - name: Verify extracted RC known values, query recovery and transactions on both JVMs
+        env:
+          EVENTHOUSE_DB_NAME: ${{ secrets.EVENTHOUSE_DB_NAME }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SPN_CLIENT_ID: ${{ secrets.AZURE_SPN_CLIENT_ID }}
+          AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
+          EVENTHOUSE_QUERY_HOST: ${{ secrets.EVENTHOUSE_QUERY_HOST }}
+        run: ./src/jdbc/Run-Windows.ps1 -Phase Live -Runtime win-${{ matrix.architecture }} -Architecture ${{ matrix.architecture }}
+
+      # No public upload or publication until exact outputs pass content review,
+      # secret scanning and all retained release gates. Public Actions artifacts
+      # are not private evidence custody.
+      - name: Enforce retained release gates
+        run: ./src/jdbc/Run-Windows.ps1 -Phase Gate -Runtime win-${{ matrix.architecture }} -Architecture ${{ matrix.architecture }}
