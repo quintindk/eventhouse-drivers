@@ -407,7 +407,7 @@
     },
     {
       "path": "src/jdbc/Run-Windows.ps1",
-      "sha256": "b791d3604ccab923c4123a779a666b1081b04276e2b8d9f942143d02c039e1ee"
+      "sha256": "12e92a7235f1bdbefd4a0a5edeb57ebfed348d8d508cbe5be48d4e46da127f3f"
     },
     {
       "path": "src/jdbc/THIRD-PARTY-NOTICES.md",

@@ -3,11 +3,13 @@
 param(
     [Parameter(Mandatory)][ValidateSet('Build', 'Live', 'Verify', 'Gate')][string] $Phase,
     [Parameter(Mandatory)][ValidateSet('win-x64', 'win-arm64')][string] $Runtime,
-    [Parameter(Mandatory)][ValidateSet('x64', 'arm64')][string] $Architecture
+    [Parameter(Mandatory)][ValidateSet('x64', 'arm64')][string] $Architecture,
+    [string] $SourceSha = $env:GITHUB_SHA
 )
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
+$ExpectedSourceSha = if ($SourceSha -cmatch '\A[0-9a-fA-F]{40}\z') { $SourceSha.ToLowerInvariant() } else { '' }
 $root = Join-Path $env:RUNNER_TEMP "jdbc-rc-$Runtime"
 $repo = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
 $reportPath = Join-Path $root "report-$Runtime.json"
@@ -15,7 +17,7 @@ $secretNames = @('EVENTHOUSE_DB_NAME', 'AZURE_TENANT_ID', 'AZURE_SPN_CLIENT_ID',
 $stage = 'initialise'
 $outcome = 'fail'
 $report = [ordered]@{
-    profile = 'jdbc-rc1-qualification'; source_sha = $env:GITHUB_SHA; source_clean = $false
+    profile = 'jdbc-rc1-qualification'; source_sha = $ExpectedSourceSha; source_clean = $false
     contract_version = 'product 0x00010003 / 16 exports'
     runner = $(if ($Architecture -eq 'arm64') { 'windows-11-arm' } else { 'windows-2025' })
     runtime = $Runtime; architecture = $Architecture; phase = $Phase
@@ -245,6 +247,32 @@ function Require-Success($Result, [ValidateSet('restore', 'publish', 'javac', 'j
 
 function Hash([string] $Path) { (Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash.ToLowerInvariant() }
 
+function Source-IdentityReason([string] $Expected, $Head, $Status) {
+    if ($Expected -cnotmatch '\A[0-9a-f]{40}\z') { return 'invalid_identity' }
+    if ($null -eq $Head -or $Head.Code -ne 0 -or $Head.ErrorText -or
+        $Head.Text.Trim() -cnotmatch '^[0-9a-f]{40}$') { return 'git_head' }
+    if ($null -eq $Status -or $Status.Code -ne 0 -or $Status.ErrorText) { return 'git_status' }
+    if ($Head.Text.Trim() -cne $Expected) { return 'head_mismatch' }
+    if ($Status.Text.Trim()) { return 'dirty_checkout' }
+    return 'none'
+}
+
+function Require-ProductSource {
+    $head = $null; $status = $null
+    if ($ExpectedSourceSha -cmatch '^[0-9a-f]{40}$') {
+        try { $head = Invoke-Child 'git' @('rev-parse', 'HEAD') } catch { }
+        if ($null -ne $head) {
+            try { $status = Invoke-Child 'git' @('status', '--porcelain') } catch { }
+        }
+    }
+    $reason = Source-IdentityReason $ExpectedSourceSha $head $status
+    if ($reason -cne 'none') {
+        $report.source_failure = $reason
+        Write-Output "BLOCKED JDBC_SOURCE reason=$reason"
+        throw 'Product source identity rejected.'
+    }
+}
+
 function Require-Pe([string] $Path) {
     $stream = [IO.File]::OpenRead($Path)
     $reader = [IO.BinaryReader]::new($stream)
@@ -323,14 +351,14 @@ function Read-ReleaseGate($Evidence, [string] $Source, [string] $TargetRuntime,
 }
 
 function Public-Summary($Evidence) {
-    $pending = Read-ReleaseGate $Evidence $env:GITHUB_SHA $Runtime $Architecture $env:GITHUB_RUN_ID $env:GITHUB_RUN_ATTEMPT
+    $pending = Read-ReleaseGate $Evidence $ExpectedSourceSha $Runtime $Architecture $env:GITHUB_RUN_ID $env:GITHUB_RUN_ATTEMPT
     foreach ($key in 'jar', 'dll', 'jna', 'windows_lock', 'managed_lock') {
         if ($Evidence.sha256[$key] -isnot [string] -or $Evidence.sha256[$key] -cnotmatch '^[0-9a-f]{64}$') { throw 'Invalid digest.' }
     }
     if ($Evidence.package_sha256 -isnot [string] -or $Evidence.package_sha256 -cnotmatch '^[0-9a-f]{64}$') { throw 'Invalid archive digest.' }
     # Positive projection only: no arbitrary keys, paths, version strings, messages,
     # live row counts or nested report objects cross the public boundary.
-    return [ordered]@{ schema_version = 1; source_sha = $env:GITHUB_SHA; runtime = $Runtime
+    return [ordered]@{ schema_version = 1; source_sha = $ExpectedSourceSha; runtime = $Runtime
         architecture = $Architecture; run_id = $env:GITHUB_RUN_ID; run_attempt = $env:GITHUB_RUN_ATTEMPT
         outcome = 'live-route-pass'; release_ready = $false; pending_release_gates = $pending
         distribution = 'blocked-notice-and-native-attribution-review'; candidate_uploaded = $false
@@ -391,6 +419,7 @@ if ($Phase -eq 'Verify') {
     $safeRoot = Join-Path $root 'public-safe'
     $verifyRoot = Join-Path $root 'content-verification'
     try {
+        Require-ProductSource
         # This branch receives no live configuration. Never upload the full report
         # or candidate while notice/distribution acceptance remains incomplete.
         foreach ($directory in $safeRoot, $verifyRoot) {
@@ -471,8 +500,9 @@ regexes = ['''(?i)^(?:example\.z2|synthetic-test)\.kusto\.fabric\.microsoft\.com
 # into success, accepts no external gate override and performs no publication.
 if ($Phase -eq 'Gate') {
     try {
+        Require-ProductSource
         $existing = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json -AsHashtable
-        $pending = Read-ReleaseGate $existing $env:GITHUB_SHA $Runtime $Architecture $env:GITHUB_RUN_ID $env:GITHUB_RUN_ATTEMPT
+        $pending = Read-ReleaseGate $existing $ExpectedSourceSha $Runtime $Architecture $env:GITHUB_RUN_ID $env:GITHUB_RUN_ATTEMPT
         if ($pending -gt 0) {
             Write-Output "BLOCKED JDBC_RELEASE pending_gates=$pending release_ready=false"
             exit 2
@@ -498,16 +528,11 @@ try {
         throw 'Staging must be outside checkout.'
     }
     $stage = 'source'
-    if ($env:GITHUB_SHA -cnotmatch '^[0-9a-f]{40}$') { throw 'Exact source SHA required.' }
-    $head = Invoke-Child 'git' @('rev-parse', 'HEAD')
-    Require-Success $head
-    $status = Invoke-Child 'git' @('status', '--porcelain')
-    Require-Success $status
-    if ($head.Text.Trim() -cne $env:GITHUB_SHA -or $status.Text.Trim()) { throw 'Source not exact and clean.' }
+    Require-ProductSource
     $report.source_clean = $true
     if ($Phase -eq 'Live') {
         $report = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json -AsHashtable
-        if ($report.source_sha -cne $env:GITHUB_SHA -or $report.stage -cne 'build-complete' -or
+        if ($report.source_sha -cne $ExpectedSourceSha -or $report.stage -cne 'build-complete' -or
             $report.runtime -cne $Runtime -or $report.architecture -cne $Architecture) { throw 'Exact architecture build report missing.' }
     }
     $report.phase = $Phase
@@ -885,7 +910,7 @@ try {
         Copy-Item -LiteralPath $noticeManifestPath -Destination (Join-Path $package 'infra\release\notice-materials.json')
         Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'THIRD-PARTY-NOTICES.md') -Destination $package
         $report.commands += 'javac --release 21 -Xlint:all -Werror; fixed-date jar; DriverTest product-native Java21/25; dumpbin exports/headers/imports'
-        $provenance = [ordered]@{ source_sha = $env:GITHUB_SHA; source_clean = $true; kind = 'jdbc-rc1-build'
+        $provenance = [ordered]@{ source_sha = $ExpectedSourceSha; source_clean = $true; kind = 'jdbc-rc1-build'
             profile = "experimental unsigned 0.1.0-rc.1 / product ABI0x00010003 / $Runtime"
             runtime = $Runtime; architecture = $Architecture; runner = $report.runner; toolchain = $report.toolchain
             sdk = $sdk.Text.Trim(); msvc = $env:VCToolsVersion; windows_sdk = $env:WindowsSDKVersion
@@ -975,11 +1000,7 @@ try {
         if ((Hash $jar) -cne $report.sha256.jar -or (Hash $dll) -cne $report.sha256.dll -or
             (Hash $jna) -cne $report.sha256.jna -or (Hash $lock) -cne $report.sha256.windows_lock -or
             (Hash $managedLock) -cne $report.sha256.managed_lock) { throw 'Hashes changed.' }
-        $status = Invoke-Child 'git' @('status', '--porcelain')
-        Require-Success $status
-        $head = Invoke-Child 'git' @('rev-parse', 'HEAD')
-        Require-Success $head
-        if ($status.Text.Trim() -or $head.Text.Trim() -cne $env:GITHUB_SHA) { throw 'Source changed.' }
+        Require-ProductSource
         if ((Hash $zip) -cne $report.package_sha256 -or
             (ConvertTo-Json -InputObject (Payload-Hashes $extracted) -Compress) -cne
             (ConvertTo-Json -InputObject $report.payload_sha256 -Compress)) { throw 'Payload changed during execution.' }
