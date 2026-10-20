@@ -1,0 +1,3 @@
+# Export manifests pin exact reviewed bytes, including upstream licence texts.
+# Disable checkout/check-in line-ending conversion on every platform.
+* -text

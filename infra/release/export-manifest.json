@@ -2,6 +2,10 @@
   "abi": "0x00010003",
   "files": [
     {
+      "path": ".gitattributes",
+      "sha256": "0641d3f1574f3eb230cd5c0cd2db812a7a68fdc638604973f9239dea20f299a6"
+    },
+    {
       "path": ".github/workflows/jdbc-windows.yml",
       "sha256": "d7efe85f2461a0db63f4d078ad9274c3890132be1c69918d2011f341956220bb"
     },
