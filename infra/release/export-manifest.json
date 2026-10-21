@@ -19,11 +19,11 @@
     },
     {
       "path": "README.md",
-      "sha256": "c178fcd5527ea9fa9121c0159f07da6fb77eeb24b341435bbf9c8a45537efa9f"
+      "sha256": "8b3a98745a1a54193b7f54d92c09113003b06c57f9144c85e76a7a627e2c44eb"
     },
     {
       "path": "SECURITY.md",
-      "sha256": "8626c5d135a253a44d4e086115a2113d2c09584c670a4802459139618bf026a7"
+      "sha256": "51f80034a3e1b3396c700883570f782b9b086dd41751b7f9735dd7dfea981990"
     },
     {
       "path": "contracts/dynamic-json.md",
@@ -47,7 +47,11 @@
     },
     {
       "path": "docs/BUILD-INSTALL.md",
-      "sha256": "31f9899b6f2d76763f458aab531af2ad932d8caf8afb4686dd0a05af70034f51"
+      "sha256": "22c091dbe5d6cbad9a3921404ef1cbf06623b895ff01fbe6ec218c089b13073a"
+    },
+    {
+      "path": "docs/RC1-QUALIFICATION.md",
+      "sha256": "812d68ae185ce412b7e1bbc3b2a438169d91cfe3daa1d1c90eda668f346e1871"
     },
     {
       "path": "global.json",
@@ -539,14 +543,19 @@
     }
   ],
   "limitations": [
-    "No fresh builds, live queries, Windows runs, package validation or release approval in this preparation",
-    "Literal clean Windows without installed modern .NET gate retained",
-    "Native attribution and WindowsDesktop notice aggregation incomplete"
+    "Publication preparation only: no new builds, live queries, Windows runs, repacks, signing or publication; fresh official Gitleaks 8.30.1 scans PASS",
+    "Human replaced literal clean Windows without installed modern .NET criterion with bounded checkpoint proof; modern .NET installed and transient load absence not proven",
+    "Rollback and side-by-side upgrade DEFERRED_NOT_QUALIFIED",
+    "Historical independent security review retained; original temporary scanner output lost; fresh public history/source/nested asset scans exit 0 findings 0 recorded separately",
+    "Independent final publication review PASS and release_ready true under existing human authority; coordinator verifies final identities before commit/publication"
   ],
   "product_linux_managed_lock_sha256": "ff4c5c554233fd2441068f94acf709f9f36dfb53f782514e9ccf5bd46039d1e5",
   "profile": "experimental JDBC RC1 public source preparation",
   "required_product_exports": 16,
   "schema_version": 1,
-  "self_exclusion": "This manifest excludes itself. Its hash is held by the independent export receipt.",
-  "status": "not approved for publication"
+  "self_exclusion": "This manifest excludes itself. Its final hash is held by the external scan receipt.",
+  "status": "PASS final independent review and fresh publication scans; ready for coordinator verification",
+  "product_source_sha": "73d757e9f73f8d65fc4dc37997313cc47a66a260",
+  "evidence_source_sha": "3181d29dc277390b8a5e5067b364172ed5d30570",
+  "release_ready": true
 }

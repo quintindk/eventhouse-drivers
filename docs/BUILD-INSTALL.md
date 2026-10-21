@@ -2,7 +2,12 @@
 
 ## Prerequisites and status
 
-No release binaries ship with this source. Do not run live checks before the
+Release candidates are separate exact ZIP assets, not binaries in this source
+tree. RC1 has retained evidence for the bounded scope in
+[RC1 qualification](RC1-QUALIFICATION.md). Independent final review and fresh
+publication scans PASS. Ready state is true under existing human publication
+authority, with final coordinator identity verification before commit/publication.
+Do not run live checks before the
 exact source is reviewed and affected Linux ARM64 Java 21/25 checks pass. Windows
 qualification remains separate and must use native x64 and ARM64 OS/process/JDK
 architectures. No emulation or Windows x86 substitution.
@@ -37,11 +42,11 @@ requires a clean exact `GITHUB_SHA`, `RUNNER_TEMP` outside the checkout and expl
 directory and verify archive/payload/source hashes before and after live checks.
 It is not a general local installer or release-publishing command.
 
-The workflow has no upload or promotion step. Its final `Gate` phase reads the
-exact-source live report and blocks on missing or non-pass retained evidence.
-Clean-environment, inventory/scans and independent validation remain unimplemented.
-Individual Build/Live success describes those routes only,
-never overall release readiness. Do not change an expected test count merely to
+The workflow uploads projected public evidence only, not candidate ZIPs, and has
+no promotion step. Its final `Gate` phase retains the older acceptance rules.
+Historical final-gate failures remain failures. The external RC1 assessment
+records later independent review and the human-approved replacement boundary
+without changing the script or original reports. Do not change an expected test count merely to
 make CI green. Current direct expectations are managed 44, published native 1,
 Java 1701 direct / 1706 native-inclusive on each JVM, including extracted files.
 Live retained expectations: base 45, cancellation 7, idle deadline 7,
@@ -57,7 +62,7 @@ identity `eventhouse-engine`. Its origin/hash is recorded in the export manifest
 Do not regenerate a lock silently or pass a managed project lock into the engine.
 
 From the repository root, use an external empty staging directory. Commands below
-are a repeatable verification recipe, not a claim that this export has been built:
+are a repeatable verification recipe, not a request to rebuild the retained RC:
 
 ```bash
 root="$PWD"
@@ -135,17 +140,18 @@ prebuilt historical DLLs or raw logs belong in a package.
 
 The SBOM distinguishes product file hashes, NuGet restore/build inputs and JNA
 archive members. It does not invent product-to-every-runtime-pack link edges or
-native versions. libffi/Brotli binary attribution and WindowsDesktop aggregation
-remain unresolved. The native runtime is compiled into NativeAOT, but exact linked
-composition still needs evidence. Fixed-date JAR/ZIP entry timestamps do not prove
+native versions. Independent review accepted conservative complete-text notices
+and restore/build/runtime distinctions for this RC. That does not establish exact
+upstream native-binary attestation. Fixed-date JAR/ZIP entry timestamps do not prove
 byte-identical NativeAOT rebuilds. Provenance is unsigned build metadata, not an
 authenticated attestation. Final live results remain separate from build-time
 provenance. `checksums.sha256` excludes itself; provenance excludes its own hash
 and the checksum manifest. External reports bind the complete ZIP identity.
 
-## Installation, upgrade, rollback and removal
+## Installation, restart and removal
 
-1. Obtain a qualified package and trusted external ZIP SHA-256. Verify the ZIP
+1. Obtain the exact candidate package and trusted external ZIP SHA-256 from the
+   qualification assessment. Verify the ZIP
    with `Get-FileHash -Algorithm SHA256`, then verify every checksum entry after
    safe extraction. Unsigned hashes do not prove publisher identity.
 2. Extract into a private version-specific directory. Select matching native
@@ -156,14 +162,31 @@ and the checksum manifest. External reports bind the complete ZIP identity.
    configuration. Supply `tenantId`, `clientId`, `clientSecret`, `nativeLibrary`
    and optional `timeoutMillis` as properties, never secret command arguments.
    Default timeout is 30000 ms; accepted configured range is 1..600000 ms.
-4. No modern .NET runtime is intended as an application prerequisite. The literal
-   runtime-free Windows proof remains outstanding. Build-tool .NET requirements
-   are distinct from application-runtime requirements. Do not promise a qualified
-   runtime-free installation until that retained gate passes.
-5. Upgrade side by side. Stop the JVM, verify the new package, update JAR/JNA/native
-   paths together, restart and run approved acceptance queries. Never hot-replace
-   a loaded native library.
-6. On failure stop the JVM, restore all paths to the prior reviewed version,
-   verify its hashes and restart. Verify query and recovery behaviour again.
-7. Remove only the owned version directory and JNA cache after JVM exit, plus its
-   application classpath/configuration entries. No schema or Driver Manager change.
+4. No separately installed modern .NET runtime is intended as an application
+   prerequisite. Human-approved RC1 proof is bounded: zero static external runtime
+   imports and zero external modern .NET modules at 32 checkpoints. Both runners
+   had modern .NET installed. Neither literal runtime-free Windows nor absence
+   between checkpoints is proven. Build-tool requirements are separate.
+5. Stop the JVM, then restart using the same verified JAR/JNA/native paths and
+   approved acceptance queries. This current-build restart passed on each native
+   architecture and JVM. Never hot-replace or unload the native library.
+6. Remove only the owned version directory and JNA cache after JVM exit, plus its
+    application classpath/configuration entries. No schema or Driver Manager change.
+
+### Upgrade and rollback: NOT QUALIFIED
+
+Side-by-side upgrade and rollback are deferred, not passed. No previous-version
+transition is established by current-build restart. For a future operator-managed
+recovery, stop the JVM before changing files, retain the complete prior package
+and its verified hashes, restore JAR/JNA/native configuration together and verify
+the application again. This is precautionary guidance, not a tested RC1 rollback
+procedure. Do not remove a shared or another application's directory.
+
+### Immutable package records
+
+The exact ZIPs retain their original README, security/build instructions and
+build-time provenance, including blocked/pending gates. Do not rewrite or repack
+them. The external RC1 assessment supersedes the specified pending conclusions
+for these exact hashes and records the narrower approved acceptance boundary.
+The DLL assembly label `eventhouse-connectivity-wp003` is an accepted non-secret
+build label, not user data or a reason to rebuild. Product JAR/DLL bytes are unchanged.

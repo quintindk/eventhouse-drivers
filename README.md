@@ -3,11 +3,14 @@
 Experimental read-only JDBC connectivity to Microsoft Fabric Eventhouse through
 its **HTTPS Query URI**, never TDS. Intended RC version: `0.1.0-rc.1`.
 
-**This source export is not a qualified release.** No binaries are included.
-Windows x64 and ARM64 packages on native Java 21 and 25 require fresh exact-source
-validation, clean installation/rollback evidence, security and attribution closure,
-independent review and release-owner approval. Passing a build is not release
-approval. The literal clean-Windows-without-modern-.NET gate remains mandatory.
+**Experimental RC1 candidate: final review and publication scans PASS.** The exact
+Windows x64 and ARM64 packages passed the retained Java 21/25 workload and the
+human-approved bounded runtime, installation, restart and removal checks.
+`release_ready` is `true` under existing human publication authority. The
+coordinator must verify the final identities before commit or publication.
+No release has been published by this preparation.
+See [RC1 qualification](docs/RC1-QUALIFICATION.md) for exact hashes and scope.
+Rollback is deferred and **NOT QUALIFIED**.
 
 ## Architecture and scope
 
@@ -60,7 +63,8 @@ bound/cleanup/recovery and TLS/no-redirect configuration tests remain required.
 
 ## Build, installation and security
 
-- [Build, install, upgrade and rollback](docs/BUILD-INSTALL.md)
+- [Build, installation and removal](docs/BUILD-INSTALL.md)
+- [RC1 qualification and limitations](docs/RC1-QUALIFICATION.md)
 - [Security and release gates](SECURITY.md)
 - [Product ABI](contracts/product-abi.md)
 - [Streaming and lifetime rules](contracts/streaming-results.md)
@@ -68,6 +72,7 @@ bound/cleanup/recovery and TLS/no-redirect configuration tests remain required.
 Project-owned source: MIT, Copyright (c) 2026 Quintin De Kok. JNA's Apache-2.0
 alternative is elected. Dependencies retain their own licences. Full collected
 texts and pinned mappings are in `licences/` and
-`infra/release/notice-materials.json`. Exact native attribution and WindowsDesktop
-notice aggregation are still incomplete. Do not treat collected texts or an SBOM
-as independent legal/security clearance.
+`infra/release/notice-materials.json`. Independent candidate review accepted the
+conservative notice scope and runtime SBOM coverage. This is not exact upstream
+native-binary attestation or a guarantee of no vulnerabilities. No stable support
+commitment or Microsoft product support is claimed.

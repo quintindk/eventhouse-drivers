@@ -37,32 +37,52 @@ before execution. Qualification has read-only repository permissions.
 
 Public workflow logs and artefacts are public content. Child output is captured
 and reduced to closed diagnostic records. No endpoint, database, tenant/client ID,
-token, connection string or row value may be emitted. Uploads and release creation
-are deliberately absent from this preparation. A scanner result is not assurance
-that arbitrary future output is safe.
+token, connection string or row value may be emitted. The workflow uploads only
+projected public evidence, not candidate ZIPs. Release creation is absent. A
+scanner result is not assurance that arbitrary future output is safe.
 
-## Retained release gates
+## RC1 acceptance boundary
 
-All are required against the final source and exact package hashes:
+The external [RC1 qualification assessment](docs/RC1-QUALIFICATION.md) binds the
+unchanged candidate hashes to the retained evidence. Human approval replaced the
+literal clean-Windows-without-installed-modern-.NET criterion with bounded
+checkpoint proof for current-build runtime, installation, restart and removal.
+It did not establish runtime absence or qualify rollback.
 
 1. Linux ARM64 product NativeAOT and Java 21/25 affected direct/live tests.
 2. Native Windows x64 and ARM64 Java 21/25 extracted-package tests, including
    unrestricted results, known values, query rejection, cancellation, timeout,
    cleanup and invalid-secret/reconnect.
-3. Clean Windows **without installed modern .NET**, package installation, restart,
-   side-by-side upgrade and rollback. Bundled .NET Framework does not establish a
-   modern .NET dependency. No destructive runtime uninstall is authorised.
+3. Current-build installation, restart and removal on both architectures/JVMs,
+   static import inspection and 32 runtime checkpoints with zero external modern
+   .NET modules. Modern .NET was installed on both runners. Transient load absence
+   between checkpoints is not proven. Upgrade and rollback are NOT QUALIFIED.
 4. Exact public-source and final-package secret/deployment-metadata scans,
    including nested archives, dependency/advisory checks, threat-model review,
    complete required notices, SBOM and honest provenance/native inventory.
-5. Independent source/candidate validation and final release-owner approval.
+5. Independent candidate validation and final review of reconstructed public
+   documentation and the five-asset publication set PASS. Fresh publication scans
+   PASS. Existing human release authority permits the ready transition, not an
+   automatic commit or publication. Coordinator verification remains required.
 
-Static PE imports, absent CLR header, controlled environment and application
-module inventories are supporting dependency evidence only. A hosted runner with
-modern .NET installed cannot pass the literal clean-environment gate. Hiding
-`dotnet` or setting an unavailable `DOTNET_ROOT` does not prove absence or prevent
-all runtime resolution. A narrower gate requires an explicit reviewed change,
-never silent substitution. Unknown/skipped mandatory checks block release.
+The recovered independent review accepted licence/notices, runtime SBOM coverage,
+secret scans, threat model and point-in-time dependency applicability for these
+exact candidates. It records four Gitleaks 8.30.1 scans with exit 0 and zero
+findings. Original temporary scanner outputs are lost. The recovered review
+summary and successful content/custody receipts are the retained evidence, not
+recreated scan reports. Fresh Gitleaks 8.30.1 publication scans now PASS, separately
+from those historical records. The official Linux ARM64 archive was verified
+against its official checksum and GitHub asset digest. Default rules were extended
+without suppression, redaction was 100%, and nested archives were scanned.
+Public Git history, the complete final source snapshot and all five publication
+assets each returned exit 0 with zero findings. Additional assets-only private
+destination and editorial checks passed. External receipts bind the final hashes
+without embedding a self-referential qualification or checksum hash.
+
+Historical ZIP documentation, provenance and failed final-gate records are
+preserved, not edited into passes. The external assessment supersedes their
+specified build-time pending conclusions only. Prebuilt JNA native versions
+remain unknown. Dependency review is not a zero-vulnerability guarantee.
 
 Unsigned experimental packaging is not authenticated publisher identity.
 Checksums establish byte integrity only. No signing is claimed. No broad stable
